@@ -12,4 +12,11 @@ export interface ISquadRepository {
       spentHours: number;
     }[]
   >;
+
+  getSquadTotalHoursByPeriod(data: {
+    squadId: number;
+    period: number;
+  }): Promise<{
+    squadSpentHours: number;
+  }>;
 }

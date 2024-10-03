@@ -5,12 +5,13 @@ import { Squad } from "@domain/entities/Squad";
 import type { ISquadRepository } from "@domain/repositories/ISquadRepository";
 import { CreateSquadUseCase } from "@domain/usecases/CreateSquad/CreateSquadUseCase";
 import { GetSquadMembersHoursUseCase } from "@domain/usecases/GetSquadMemberHours/GetSquadMembersHoursUseCase";
+import { GetSquadTotalHoursUseCase } from "@domain/usecases/GetSquadTotalHours/GetSquadTotalHoursUseCase";
 
 interface ICreateSquadBody {
   name: string;
 }
 
-interface IGetMemberHoursParams {
+interface IGetSquadParams {
   squad_id: number;
   period: number; // Days
 }
@@ -18,11 +19,13 @@ interface IGetMemberHoursParams {
 export class SquadController {
   private createSquad: CreateSquadUseCase;
   private getSquadMemberHours: GetSquadMembersHoursUseCase;
+  private getSquadTotalHours: GetSquadTotalHoursUseCase;
 
   constructor() {
     const squadRepository: ISquadRepository = new SquadRepository();
     this.createSquad = new CreateSquadUseCase(squadRepository);
     this.getSquadMemberHours = new GetSquadMembersHoursUseCase(squadRepository);
+    this.getSquadTotalHours = new GetSquadTotalHoursUseCase(squadRepository);
   }
 
   async create(request: FastifyRequest): Promise<Squad> {
@@ -36,14 +39,11 @@ export class SquadController {
     }
   }
 
-  async getMemberHoursByPeriod(request: FastifyRequest): Promise<{
-    [employeeId: string]: { spentHours: number };
-  }> {
+  async getMemberHoursByPeriod(
+    request: FastifyRequest
+  ): Promise<Record<string, { spentHours: number }>> {
     try {
-      const { squad_id: squadId, period } =
-        request.query as IGetMemberHoursParams;
-
-      console.log({ squadId, period });
+      const { squad_id: squadId, period } = request.query as IGetSquadParams;
 
       return await this.getSquadMemberHours.call({
         squadId,
@@ -51,6 +51,22 @@ export class SquadController {
       });
     } catch (error) {
       console.error("Failed to get squad member hours.", error);
+      throw error;
+    }
+  }
+
+  async getSquadTotalHoursByPeriod(
+    request: FastifyRequest
+  ): Promise<{ squadSpentHours: number }> {
+    try {
+      const { squad_id: squadId, period } = request.query as IGetSquadParams;
+
+      return await this.getSquadTotalHours.call({
+        squadId,
+        period,
+      });
+    } catch (error) {
+      console.error("Failed to get squad total hours.", error);
       throw error;
     }
   }

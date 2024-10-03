@@ -6,25 +6,27 @@ interface Params {
   period: number;
 }
 
-interface Response {
-  [employeeId: string]: { spentHours: number };
+interface ISpentHours {
+  spentHours: number;
 }
 
-export class GetSquadMembersHoursUseCase implements UseCase<Response, Params> {
+export class GetSquadMembersHoursUseCase
+  implements UseCase<Record<string, ISpentHours>, Params>
+{
   constructor(private squadRepository: ISquadRepository) {}
 
-  async call(params: Params): Promise<Response> {
+  async call(params: Params): Promise<Record<string, ISpentHours>> {
     try {
       const data = await this.squadRepository.getSquadMembersHoursByPeriod(
         params
       );
 
-      const membersHours: Record<string, { spentHours: number }> = {};
+      const hoursPerMember: Record<string, { spentHours: number }> = {};
       for (const row of data) {
-        membersHours[row.id] = { spentHours: row.spentHours };
+        hoursPerMember[row.id] = { spentHours: row.spentHours };
       }
 
-      return membersHours;
+      return hoursPerMember;
     } catch (error) {
       console.error(error);
       throw error;
