@@ -13,8 +13,8 @@ export class SquadController {
   private createSquad: CreateSquadUseCase;
 
   constructor() {
-    const userRepository: ISquadRepository = new SquadRepository();
-    this.createSquad = new CreateSquadUseCase(userRepository);
+    const squadRepository: ISquadRepository = new SquadRepository();
+    this.createSquad = new CreateSquadUseCase(squadRepository);
   }
 
   async create(request: FastifyRequest): Promise<void> {

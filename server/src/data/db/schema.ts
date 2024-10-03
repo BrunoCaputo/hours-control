@@ -27,7 +27,7 @@ export const reports = pgTable("reports", {
     .primaryKey()
     .unique()
     .$defaultFn(() => generateUniqueNumericId()),
-  description: text("description"),
+  description: text("description").notNull(),
   employeeId: integer("employeeId")
     .references(() => employee.id)
     .notNull(),
