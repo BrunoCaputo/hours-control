@@ -15,7 +15,16 @@ export class GetSquadMembersHoursUseCase implements UseCase<Response, Params> {
 
   async call(params: Params): Promise<Response> {
     try {
-      return await this.squadRepository.getSquadMembersHoursByPeriod(params);
+      const data = await this.squadRepository.getSquadMembersHoursByPeriod(
+        params
+      );
+
+      const membersHours: Record<string, { spentHours: number }> = {};
+      for (const row of data) {
+        membersHours[row.id] = { spentHours: row.spentHours };
+      }
+
+      return membersHours;
     } catch (error) {
       console.error(error);
       throw error;

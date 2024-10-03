@@ -20,7 +20,12 @@ export class SquadRepository implements ISquadRepository {
   async getSquadMembersHoursByPeriod(data: {
     squadId: number;
     period: number;
-  }): Promise<{ [employeeId: string]: { spentHours: number } }> {
+  }): Promise<
+    {
+      id: number;
+      spentHours: number;
+    }[]
+  > {
     const { squadId, period } = data;
 
     const initialPeriodDate = dayjs().subtract(period, "days").toDate();
@@ -68,11 +73,6 @@ export class SquadRepository implements ISquadRepository {
       })
       .from(filterSquadMembersById);
 
-    const membersHours: { [employeeId: string]: { spentHours: number } } = {};
-    for (const row of result) {
-      membersHours[row.id] = { spentHours: row.spentHours };
-    }
-
-    return membersHours;
+    return result;
   }
 }

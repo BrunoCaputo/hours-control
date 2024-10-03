@@ -6,5 +6,10 @@ export interface ISquadRepository {
   getSquadMembersHoursByPeriod(data: {
     squadId: number;
     period: number;
-  }): Promise<{ [employeeId: string]: { spentHours: number } }>;
+  }): Promise<
+    {
+      id: number;
+      spentHours: number;
+    }[]
+  >;
 }
