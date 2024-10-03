@@ -5,9 +5,11 @@ import type { IEmployeeRepository } from "@domain/repositories/IEmployeeReposito
 export class CreateEmployeeUseCase implements UseCase<Employee, Employee> {
   constructor(private employeeRepository: IEmployeeRepository) {}
 
-  async call(employee: Employee): Promise<Employee> {
+  async call(employeeData: Employee): Promise<Employee> {
     try {
-      await this.employeeRepository.createEmployee(employee);
+      const { employee } = await this.employeeRepository.createEmployee(
+        employeeData
+      );
 
       return employee;
     } catch (error) {

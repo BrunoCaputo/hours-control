@@ -8,6 +8,7 @@ import {
 
 // Routes
 import { createEmployeeRoute } from "./routes/create-employee.route";
+import { createSquadRoute } from "./routes/create-squad.route";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -19,6 +20,7 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 app.register(createEmployeeRoute);
+app.register(createSquadRoute);
 
 app
   .listen({

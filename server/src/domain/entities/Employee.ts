@@ -20,9 +20,6 @@ export class Employee {
   public get id(): number {
     return this._id ?? 0;
   }
-  public set id(newId: number) {
-    this._id = newId;
-  }
 
   public get name(): string {
     return this._name;

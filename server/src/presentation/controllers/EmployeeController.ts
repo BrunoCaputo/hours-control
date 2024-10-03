@@ -15,8 +15,8 @@ export class EmployeeController {
   private createEmployee: CreateEmployeeUseCase;
 
   constructor() {
-    const userRepository: IEmployeeRepository = new EmployeeRepository();
-    this.createEmployee = new CreateEmployeeUseCase(userRepository);
+    const employeeRepository: IEmployeeRepository = new EmployeeRepository();
+    this.createEmployee = new CreateEmployeeUseCase(employeeRepository);
   }
 
   async create(request: FastifyRequest): Promise<void> {

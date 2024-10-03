@@ -1,7 +1,7 @@
+import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import z from "zod";
 
 import { EmployeeController } from "@presentation/controllers/EmployeeController";
-import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 
 export const createEmployeeRoute: FastifyPluginAsyncZod = async (app) => {
   const controller = new EmployeeController();
