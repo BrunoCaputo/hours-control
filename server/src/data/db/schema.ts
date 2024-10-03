@@ -1,6 +1,6 @@
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 
-import { generateUniqueNumericId } from "../utils/generate-unique-id";
+import { generateUniqueNumericId } from "@utils/generate-unique-id";
 
 export const employee = pgTable("employee", {
   id: integer("id")
