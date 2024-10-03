@@ -32,6 +32,7 @@ export class ReportController {
       );
     } catch (error) {
       console.error("Failed to create report.", error);
+      throw error;
     }
   }
 }

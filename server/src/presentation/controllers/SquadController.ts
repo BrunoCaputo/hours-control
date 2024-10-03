@@ -24,6 +24,7 @@ export class SquadController {
       await this.createSquad.call(new Squad({ name }));
     } catch (error) {
       console.error("Failed to create squad.", error);
+      throw error;
     }
   }
 }

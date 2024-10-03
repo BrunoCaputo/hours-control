@@ -32,6 +32,7 @@ export class EmployeeController {
       );
     } catch (error) {
       console.error("Failed to create employee.", error);
+      throw error;
     }
   }
 }
