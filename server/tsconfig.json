@@ -14,11 +14,13 @@
     "moduleResolution": "node16",
 
     "paths": {
+      "@config/*": ["config/*"],
+      "@core/*": ["core/*"],
       "@data/*": ["data/*"],
       "@domain/*": ["domain/*"],
       "@presentation/*": ["presentation/*"],
-      "@utils/*": ["utils/*"],
-      "@shared/*": ["shared/*"]
+      "@shared/*": ["shared/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["src"],

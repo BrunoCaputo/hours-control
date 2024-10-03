@@ -6,6 +6,9 @@ import {
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 
+// Routes
+import { createEmployeeRoute } from "./routes/create-employee.route";
+
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
 app.register(fastifyCors, {
@@ -14,6 +17,8 @@ app.register(fastifyCors, {
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
+
+app.register(createEmployeeRoute);
 
 app
   .listen({

@@ -10,7 +10,7 @@ export const employee = pgTable("employee", {
   name: text("name").notNull(),
   estimatedHours: integer("estimatedHours").notNull(),
   squadId: integer("squadId")
-    .references(() => squad.id)
+    // .references(() => squad.id)
     .notNull(),
 });
 
