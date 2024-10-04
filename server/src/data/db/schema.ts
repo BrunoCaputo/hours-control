@@ -1,6 +1,6 @@
 import { pgTable, text, integer, timestamp } from "drizzle-orm/pg-core";
 
-import { generateUniqueNumericId } from "../utils/generate-unique-id";
+import { generateUniqueNumericId } from "@utils/generate-unique-id";
 
 export const employee = pgTable("employee", {
   id: integer("id")
@@ -18,7 +18,7 @@ export const squad = pgTable("squad", {
   id: integer("id")
     .primaryKey()
     .unique()
-    .$defaultFn(() => generateUniqueNumericId()),
+    .$defaultFn(() => generateUniqueNumericId(3)),
   name: text("name").notNull(),
 });
 
@@ -27,7 +27,7 @@ export const reports = pgTable("reports", {
     .primaryKey()
     .unique()
     .$defaultFn(() => generateUniqueNumericId()),
-  description: text("description"),
+  description: text("description").notNull(),
   employeeId: integer("employeeId")
     .references(() => employee.id)
     .notNull(),
