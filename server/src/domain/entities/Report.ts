@@ -19,6 +19,16 @@ export class Report {
     this._createdAt = report.createdAt;
   }
 
+  public toJSON() {
+    return {
+      id: this._id,
+      description: this._description,
+      employeeId: this._employeeId,
+      spentHours: this._spentHours,
+      createdAt: this._createdAt,
+    };
+  }
+
   // GETTERS AND SETTERS
   public get id(): number {
     return this._id ?? 0;

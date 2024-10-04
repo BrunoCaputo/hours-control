@@ -16,6 +16,15 @@ export class Employee {
     this._squadId = employee.squadId;
   }
 
+  public toJSON() {
+    return {
+      id: this._id,
+      name: this._name,
+      estimatedHours: this._estimatedHours,
+      squadId: this._squadId,
+    };
+  }
+
   // GETTERS AND SETTERS
   public get id(): number {
     return this._id ?? 0;

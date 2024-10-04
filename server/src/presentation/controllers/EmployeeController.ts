@@ -3,6 +3,7 @@ import type { FastifyRequest } from "fastify";
 import { EmployeeRepository } from "@data/repositories/EmployeeRepository";
 import type { IEmployeeRepository } from "@domain/repositories/IEmployeeRepository";
 import { CreateEmployeeUseCase } from "@domain/usecases/CreateEmployee/CreateEmployeeUseCase";
+import { GetEmployeesUseCase } from "@domain/usecases/GetEmployees/GetEmployeesUseCase";
 import { Employee } from "@domain/entities/Employee";
 
 interface ICreateEmployeeBody {
@@ -13,10 +14,12 @@ interface ICreateEmployeeBody {
 
 export class EmployeeController {
   private createEmployee: CreateEmployeeUseCase;
+  private getEmployees: GetEmployeesUseCase;
 
   constructor() {
     const employeeRepository: IEmployeeRepository = new EmployeeRepository();
     this.createEmployee = new CreateEmployeeUseCase(employeeRepository);
+    this.getEmployees = new GetEmployeesUseCase(employeeRepository);
   }
 
   async create(request: FastifyRequest): Promise<void> {
@@ -32,6 +35,15 @@ export class EmployeeController {
       );
     } catch (error) {
       console.error("Failed to create employee.", error);
+      throw error;
+    }
+  }
+
+  async get(): Promise<Employee[]> {
+    try {
+      return await this.getEmployees.call();
+    } catch (error) {
+      console.error("Failed to get employees.", error);
       throw error;
     }
   }

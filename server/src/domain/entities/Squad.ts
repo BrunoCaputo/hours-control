@@ -7,6 +7,13 @@ export class Squad {
     this._name = squad.name;
   }
 
+  public toJSON() {
+    return {
+      id: this._id,
+      name: this._name,
+    };
+  }
+
   // GETTERS AND SETTERS
   public get id(): number {
     return this._id ?? 0;

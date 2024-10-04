@@ -22,4 +22,10 @@ export class EmployeeRepository implements IEmployeeRepository {
       employee: new Employee(data),
     };
   }
+
+  async getEmployees(): Promise<Employee[]> {
+    const employees = await db.select().from(employee);
+
+    return employees.map((employee) => new Employee(employee));
+  }
 }
