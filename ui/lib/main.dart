@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hours_control/presentation/screens/home_screen.dart';
+import 'package:hours_control/core/mobx/platform_store.dart';
+import 'package:hours_control/presentation/screens/main_screen.dart';
 import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
+import 'package:hours_control/presentation/themes/main_color_theme.dart';
+
+final platformStore = GetIt.I.get<PlatformStore>();
 
 void main() {
   runApp(const MyApp());
@@ -10,17 +17,39 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  void _checkRegistration() {
+    try {
+      if (!GetIt.I.isRegistered<PlatformStore>()) {
+        GetIt.I.registerSingleton<PlatformStore>(
+          PlatformStore(),
+        );
+      }
+    } catch (err) {
+      throw Exception("Failed to register: $err");
+    }
+  }
+
+  void _init() async {
+    _checkRegistration();
+    try {
+      platformStore.setIsMobile(Platform.isAndroid || Platform.isIOS);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _init();
+
     return MaterialApp(
       title: 'PD Hours control',
       themeMode: ThemeMode.light,
-      home: const HomeScreen(),
+      home: const MainScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
-        primaryColor: const Color(0xFF4263EB),
         textTheme: GoogleFonts.robotoTextTheme(
           TextTheme(
             headlineLarge: GoogleFonts.roboto(
@@ -61,6 +90,13 @@ class MyApp extends StatelessWidget {
           ),
         ),
         extensions: const [
+          MainColorTheme(
+            blue: Color(0xFF4263EB),
+            blue2: Color(0xFF2342C0),
+            purple: Color(0xFF7048E8),
+            purple2: Color(0xFF5028C6),
+            pink: Color(0xFF51CF66),
+          ),
           GrayscaleColorTheme(
             black: Color(0xFF212429),
             gray1: Color(0xFFF8F9FA),
@@ -74,7 +110,6 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
-        primaryColor: const Color(0xFF4263EB),
         textTheme: GoogleFonts.robotoTextTheme(
           TextTheme(
             headlineLarge: GoogleFonts.roboto(
@@ -115,6 +150,13 @@ class MyApp extends StatelessWidget {
           ),
         ),
         extensions: const [
+          MainColorTheme(
+            blue: Color(0xFF4263EB),
+            blue2: Color(0xFF2342C0),
+            purple: Color(0xFF7048E8),
+            purple2: Color(0xFF5028C6),
+            pink: Color(0xFF51CF66),
+          ),
           GrayscaleColorTheme(
             black: Color(0xFF212429),
             gray1: Color(0xFFF8F9FA),

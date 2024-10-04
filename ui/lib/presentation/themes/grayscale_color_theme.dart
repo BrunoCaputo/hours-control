@@ -19,17 +19,17 @@ class GrayscaleColorTheme extends ThemeExtension<GrayscaleColorTheme> {
 
   @override
   GrayscaleColorTheme copyWith({
-    Color? black,
-    Color? gray1,
-    Color? gray2,
+    Color? blue,
+    Color? purple,
+    Color? pink,
     Color? gray3,
     Color? gray4,
     Color? grayBody,
   }) {
     return GrayscaleColorTheme(
-      black: black ?? this.black,
-      gray1: gray1 ?? this.gray1,
-      gray2: gray2 ?? this.gray2,
+      black: blue ?? this.black,
+      gray1: purple ?? this.gray1,
+      gray2: pink ?? this.gray2,
       gray3: gray3 ?? this.gray3,
       gray4: gray4 ?? this.gray4,
       grayBody: grayBody ?? this.grayBody,

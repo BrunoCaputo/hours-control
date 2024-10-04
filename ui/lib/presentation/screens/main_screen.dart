@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
+import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/presentation/components/action_button.dart';
 import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+final platformStore = GetIt.I.get<PlatformStore>();
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -33,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       appBar: AppBar(
         backgroundColor: Colors.white,
         toolbarHeight: 110,
+        centerTitle: true,
         title: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,10 +53,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 ),
                 Text(
                   "Interface para lançamento de horas",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray3,
-                      ),
-                )
+                  style: (platformStore.isMobile
+                          ? Theme.of(context).textTheme.bodySmall
+                          : Theme.of(context).textTheme.bodyMedium)
+                      ?.copyWith(
+                    color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray3,
+                  ),
+                ),
               ],
             ),
             Column(
@@ -66,7 +74,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       "PD Hours",
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    const ActionButton(),
+                    ActionButton(
+                      text: "Lançar horas",
+                      onPressed: () {
+                        print("PRESSED");
+                      },
+                    ),
                   ],
                 ),
                 Container(),
@@ -82,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
             Tab(
               text: "Usuários",
-            )
+            ),
           ],
         ),
       ),
