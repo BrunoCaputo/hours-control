@@ -20,33 +20,33 @@ A interface do usuário foi desenvolvida em `Flutter`, garantindo uma experiênc
 
 ### Server
 
-Criar o container Docker: Na pasta do [servidor](./server/package.json), inicie um `container Docker` do `postgreSQL` para armazenar os dados da aplicação:
+1. **Criar o container Docker**: Na pasta do [servidor](./server/package.json), inicie um `container Docker` do `postgreSQL` para armazenar os dados da aplicação:
 
-```shell
+```bash
 docker compose up
 ```
 
-Instalar as dependências: Utilize o gerenciador de pacotes de sua preferência (aqui, estamos utilizando o yarn):
+2. **Instalar as dependências**: Utilize o gerenciador de pacotes de sua preferência (aqui, estamos utilizando o yarn):
 
-```shell
+```bash
 yarn
 ```
 
-Criar as tabelas no banco de dados: Com o container em execução e as dependências instaladas, utilize o `Drizzle` para gerar as `migrações` e criar as tabelas:
+3. **Criar as tabelas no banco de dados**: Com o container em execução e as dependências instaladas, utilize o `Drizzle` para gerar as `migrações` e criar as tabelas:
 
-```shell
+```bash
 yarn run drizzle:generate && yarn run drizzle:migrate
 ```
 
-Visualizar as tabelas: O `Drizzle` fornece uma ferramenta de estúdio para visualizar as tabelas do banco:
+4. **Visualizar as tabelas**: O `Drizzle` fornece uma ferramenta de estúdio para visualizar as tabelas do banco:
 
-```shell
+```bash
 yarn run drizzle:studio
 ```
 
-Executar a API: Por fim, inicie a API para permitir as requisições:
+5. **Executar a API**: Por fim, inicie a API para permitir as requisições:
 
-```shell
+```bash
 yarn run start
 ```
 
@@ -56,8 +56,8 @@ A partir desse ponto, as requisições para a API estarão prontas para uso. Há
 
 Antes de iniciar a interface do usuário, certifique-se de ter o [flutter](https://docs.flutter.dev/get-started/install) instalado e configurado em seu ambiente.
 
-Instalar as dependências: Na pasta da [interface de usuário](./ui/pubspec.yaml),  execute os comandos abaixo para instalar as dependências listadas no [pubspec.yaml](./ui/pubspec.yaml).
+1. **Instalar as dependências**: Na pasta da [interface de usuário](./ui/pubspec.yaml), execute os comandos abaixo para instalar as dependências listadas no [pubspec.yaml](./ui/pubspec.yaml).
 
-```shell
+```bash
 flutter clean && flutter pub get && dart run build_runner build --delete-conflicting-outputs
 ```
