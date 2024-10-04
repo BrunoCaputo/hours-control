@@ -1,60 +1,62 @@
 # PD Hours Control
 
-Esse projeto tem como objetivo construir uma aplicação que permita a empresa ter o controle de horas dos funcionários, separando-os por squads, e obter um resumo das horas gastas pelos times.
+Este projeto tem como objetivo desenvolver uma aplicação que permita à empresa controlar as horas trabalhadas pelos funcionários, organizando-os por squads, e fornecendo um resumo das horas dedicadas por cada equipe.
 
 ## Sobre
 
-O sistema está dividido em duas partes: `Server` e `UI`.
+O sistema é composto por duas partes principais: `Server` (lado do servidor) e `UI` (interface do usuário).
 
 ### Server
 
-O lado do servidor, foi criado uma `API` utilizando [Node.js](https://nodejs.org/pt) com o [fastify](https://fastify.dev/) para criação das rotas.
+No lado do servidor, foi desenvolvida uma `API` utilizando [Node.js](https://nodejs.org/pt) com o framework [Fastify](https://fastify.dev/) para criação das rotas.
 
-Para o banco de dados está sendo usado o [postgreSQL](https://www.postgresql.org/) e para manipular todas as funções do banco é usado o [Drizzle ORM](https://orm.drizzle.team/).
+O banco de dados utilizado é o [PostgreSQL](https://www.postgresql.org/), e o gerenciamento das operações é realizado através do [Drizzle ORM](https://orm.drizzle.team/).
 
 ### UI
+
+A interface do usuário foi desenvolvida em `Flutter`, garantindo uma experiência visual e funcional fluida.
 
 ## Como executar
 
 ### Server
 
-Na pasta correspondente ao [servidor](./server/package.json), deve-se criar o `container Docker` do `postgreSQL` para armazenar os dados da aplicação.
+Criar o container Docker: Na pasta do [servidor](./server/package.json), inicie um `container Docker` do `postgreSQL` para armazenar os dados da aplicação:
 
 ```shell
 docker compose up
 ```
 
-Agora deve-se gerar os pacotes de dependências `node_modules`. Aqui é usado o yarn como gerenciador de pacotes, mas é possível usar o de sua preferência.
+Instalar as dependências: Utilize o gerenciador de pacotes de sua preferência (aqui, estamos utilizando o yarn):
 
 ```shell
 yarn
 ```
 
-Com o container criado e rodando e os pacotes instalados, agora é possível fazer a criação das tabelas no banco. Para isso, é necessário utilizar o drizzle para gerar as `migrations` e criar as tabelas no banco que está no container.
+Criar as tabelas no banco de dados: Com o container em execução e as dependências instaladas, utilize o `Drizzle` para gerar as `migrações` e criar as tabelas:
 
 ```shell
 yarn run drizzle:generate && yarn run drizzle:migrate
 ```
 
-Para visualizar as tabelas do banco, o drizzle disponibiliza o studio.
+Visualizar as tabelas: O `Drizzle` fornece uma ferramenta de estúdio para visualizar as tabelas do banco:
 
 ```shell
 yarn run drizzle:studio
 ```
 
-Por último, é necessário rodas a API para fazer as requisições.
+Executar a API: Por fim, inicie a API para permitir as requisições:
 
 ```shell
 yarn run start
 ```
 
-Agora já é possível fazer as requisições para a API. Aqui tem disponível uma [Documentação das rotas do insomnia](./server/docs/Insomnia_requests.json).
+A partir desse ponto, as requisições para a API estarão prontas para uso. Há também uma [documentação das rotas do insomnia](./server/docs/Insomnia_requests.json).
 
 ### UI
 
-Antes de tudo, é necessário ter o [flutter](https://docs.flutter.dev/get-started/install) instalado e configurado no seu ambiente.
+Antes de iniciar a interface do usuário, certifique-se de ter o [flutter](https://docs.flutter.dev/get-started/install) instalado e configurado em seu ambiente.
 
-Após instalar o flutter, na pasta correspondente à [interface de usuário](./ui/pubspec.yaml), é necessário instalar as dependências listadas no [pubspec.yaml](./ui/pubspec.yaml).
+Instalar as dependências: Na pasta da [interface de usuário](./ui/pubspec.yaml),  execute os comandos abaixo para instalar as dependências listadas no [pubspec.yaml](./ui/pubspec.yaml).
 
 ```shell
 flutter clean && flutter pub get && dart run build_runner build --delete-conflicting-outputs
