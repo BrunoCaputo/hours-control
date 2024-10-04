@@ -3,7 +3,7 @@ import z from "zod";
 
 import { SquadController } from "@presentation/controllers/SquadController";
 
-export const getSquadAverageHoursByPeriodRoute: FastifyPluginAsyncZod = async (
+export const getSquadAverageHoursPerDayByPeriodRoute: FastifyPluginAsyncZod = async (
   app
 ) => {
   const controller = new SquadController();
@@ -20,6 +20,6 @@ export const getSquadAverageHoursByPeriodRoute: FastifyPluginAsyncZod = async (
         querystring: querySchema,
       },
     },
-    controller.getSquadAverageHoursByPeriod.bind(controller)
+    controller.getSquadAverageHoursPerDayByPeriod.bind(controller)
   );
 };

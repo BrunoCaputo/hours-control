@@ -4,7 +4,7 @@ import { SquadRepository } from "@data/repositories/SquadRepository";
 import { Squad } from "@domain/entities/Squad";
 import type { ISquadRepository } from "@domain/repositories/ISquadRepository";
 import { CreateSquadUseCase } from "@domain/usecases/CreateSquad/CreateSquadUseCase";
-import { GetSquadAverageHoursUseCase } from "@domain/usecases/GetSquadAverageHours/GetSquadAverageHoursUseCase";
+import { GetSquadAverageHoursPerDayUseCase } from "@domain/usecases/GetSquadAverageHoursPerDay/GetSquadAverageHoursPerDayUseCase";
 import { GetSquadMembersHoursUseCase } from "@domain/usecases/GetSquadMemberHours/GetSquadMembersHoursUseCase";
 import { GetSquadTotalHoursUseCase } from "@domain/usecases/GetSquadTotalHours/GetSquadTotalHoursUseCase";
 
@@ -19,14 +19,14 @@ interface IGetSquadParams {
 
 export class SquadController {
   private createSquad: CreateSquadUseCase;
-  private getSquadeAverageHours: GetSquadAverageHoursUseCase;
+  private getSquadAverageHoursPerDay: GetSquadAverageHoursPerDayUseCase;
   private getSquadMemberHours: GetSquadMembersHoursUseCase;
   private getSquadTotalHours: GetSquadTotalHoursUseCase;
 
   constructor() {
     const squadRepository: ISquadRepository = new SquadRepository();
     this.createSquad = new CreateSquadUseCase(squadRepository);
-    this.getSquadeAverageHours = new GetSquadAverageHoursUseCase(
+    this.getSquadAverageHoursPerDay = new GetSquadAverageHoursPerDayUseCase(
       squadRepository
     );
     this.getSquadMemberHours = new GetSquadMembersHoursUseCase(squadRepository);
@@ -76,13 +76,13 @@ export class SquadController {
     }
   }
 
-  async getSquadAverageHoursByPeriod(
+  async getSquadAverageHoursPerDayByPeriod(
     request: FastifyRequest
   ): Promise<{ squadAverageHours: number }> {
     try {
       const { squad_id: squadId, period } = request.query as IGetSquadParams;
 
-      return await this.getSquadeAverageHours.call({
+      return await this.getSquadAverageHoursPerDay.call({
         squadId,
         period,
       });

@@ -10,14 +10,21 @@ interface IAverageHours {
   squadAverageHours: number;
 }
 
-export class GetSquadAverageHoursUseCase
+export class GetSquadAverageHoursPerDayUseCase
   implements UseCase<IAverageHours, Params>
 {
   constructor(private squadRepository: ISquadRepository) {}
 
   async call(params: Params): Promise<IAverageHours> {
     try {
-      return await this.squadRepository.getSquadAverageHoursByPeriod(params);
+      const { squadSpentHours } =
+        await this.squadRepository.getSquadTotalHoursByPeriod(params);
+
+      return {
+        squadAverageHours: Number.parseFloat(
+          (squadSpentHours / params.period).toFixed(2)
+        ),
+      };
     } catch (error) {
       console.error(error);
       throw error;
