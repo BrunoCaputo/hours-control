@@ -24,13 +24,13 @@ Na pasta correspondente ao [servidor](./server/package.json), deve-se criar o `c
 docker compose up
 ```
 
-Agora deve-se gerar os pacotes de dependências `node_modules`.
+Agora deve-se gerar os pacotes de dependências `node_modules`. Aqui é usado o yarn como gerenciador de pacotes, mas é possível usar o de sua preferência.
 
 ```shell
 yarn
 ```
 
-Com o container criado e rodando e os pacotes instalados, agora é possível fazer a criação das tabelas no banco (Aqui é usado o yarn como gerenciador de pacotes). Para isso, é necessário utilizar o drizzle para gerar as `migrations` e criar as tabelas no banco que está no container.
+Com o container criado e rodando e os pacotes instalados, agora é possível fazer a criação das tabelas no banco. Para isso, é necessário utilizar o drizzle para gerar as `migrations` e criar as tabelas no banco que está no container.
 
 ```shell
 yarn run drizzle:generate && yarn run drizzle:migrate
