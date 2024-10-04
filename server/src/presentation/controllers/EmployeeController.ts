@@ -39,7 +39,7 @@ export class EmployeeController {
     }
   }
 
-  async get(): Promise<Employee[]> {
+  async get(): Promise<{ employees: Employee[] }> {
     try {
       return await this.getEmployees.call();
     } catch (error) {

@@ -5,9 +5,11 @@ import type { IEmployeeRepository } from "@domain/repositories/IEmployeeReposito
 export class GetEmployeesUseCase implements UseCase {
   constructor(private employeeRepository: IEmployeeRepository) {}
 
-  async call(): Promise<Employee[]> {
+  async call(): Promise<{ employees: Employee[] }> {
     try {
-      return await this.employeeRepository.getEmployees();
+      const employees = await this.employeeRepository.getEmployees();
+
+      return { employees };
     } catch (error) {
       console.error(error);
       throw error;

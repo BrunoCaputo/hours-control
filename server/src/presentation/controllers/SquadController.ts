@@ -6,6 +6,7 @@ import type { ISquadRepository } from "@domain/repositories/ISquadRepository";
 import { CreateSquadUseCase } from "@domain/usecases/CreateSquad/CreateSquadUseCase";
 import { GetSquadAverageHoursPerDayUseCase } from "@domain/usecases/GetSquadAverageHoursPerDay/GetSquadAverageHoursPerDayUseCase";
 import { GetSquadMembersHoursUseCase } from "@domain/usecases/GetSquadMemberHours/GetSquadMembersHoursUseCase";
+import { GetSquadsUseCase } from "@domain/usecases/GetSquads/GetSquadsUseCase";
 import { GetSquadTotalHoursUseCase } from "@domain/usecases/GetSquadTotalHours/GetSquadTotalHoursUseCase";
 
 interface ICreateSquadBody {
@@ -21,6 +22,7 @@ export class SquadController {
   private createSquad: CreateSquadUseCase;
   private getSquadAverageHoursPerDay: GetSquadAverageHoursPerDayUseCase;
   private getSquadMemberHours: GetSquadMembersHoursUseCase;
+  private getSquads: GetSquadsUseCase;
   private getSquadTotalHours: GetSquadTotalHoursUseCase;
 
   constructor() {
@@ -30,6 +32,7 @@ export class SquadController {
       squadRepository
     );
     this.getSquadMemberHours = new GetSquadMembersHoursUseCase(squadRepository);
+    this.getSquads = new GetSquadsUseCase(squadRepository);
     this.getSquadTotalHours = new GetSquadTotalHoursUseCase(squadRepository);
   }
 
@@ -40,6 +43,15 @@ export class SquadController {
       return await this.createSquad.call(new Squad({ name }));
     } catch (error) {
       console.error("Failed to create squad.", error);
+      throw error;
+    }
+  }
+
+  async get(): Promise<{ squads: Squad[] }> {
+    try {
+      return await this.getSquads.call();
+    } catch (error) {
+      console.error("Failed to get squads.", error);
       throw error;
     }
   }

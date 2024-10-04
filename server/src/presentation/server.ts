@@ -14,6 +14,7 @@ import { getEmployeesRoute } from "./routes/get-employees.route";
 import { getSquadAverageHoursPerDayByPeriodRoute } from "./routes/get-squad-average-hours-per-day-by-period.route";
 import { getSquadMembersHoursByPeriodRoute } from "./routes/get-squad-members-hours-by-period.route";
 import { getSquadTotalHoursByPeriodRoute } from "./routes/get-squad-total-hours-by-period.route";
+import { getSquadsRoute } from "./routes/get-squads.route";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -29,6 +30,7 @@ app.register(getEmployeesRoute);
 app.register(getSquadAverageHoursPerDayByPeriodRoute);
 app.register(getSquadMembersHoursByPeriodRoute);
 app.register(getSquadTotalHoursByPeriodRoute);
+app.register(getSquadsRoute);
 
 // POST
 app.register(createEmployeeRoute);

@@ -17,6 +17,12 @@ export class SquadRepository implements ISquadRepository {
     };
   }
 
+  async getSquads(): Promise<Squad[]> {
+    const squads = await db.select().from(squad);
+
+    return squads.map((squad) => new Squad(squad));
+  }
+
   async getSquadMembersHoursByPeriod(data: {
     squadId: number;
     period: number;
