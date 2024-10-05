@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/presentation/components/action_button.dart';
+import 'package:hours_control/presentation/screens/squads_screen.dart';
 import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
@@ -31,84 +33,85 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        toolbarHeight: 110,
-        centerTitle: true,
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/images/logo.svg",
-                  width: 50,
-                  fit: BoxFit.cover,
-                ),
-                Text(
-                  "Interface para lançamento de horas",
-                  style: (platformStore.isMobile
-                          ? Theme.of(context).textTheme.bodySmall
-                          : Theme.of(context).textTheme.bodyMedium)
-                      ?.copyWith(
-                    color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray3,
+    return Observer(
+      builder: (_) {
+        return Scaffold(
+          extendBody: true,
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            toolbarHeight: 110,
+            centerTitle: true,
+            title: Padding(
+              padding: EdgeInsets.symmetric(horizontal: platformStore.isMobile ? 0 : 160),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/images/logo.svg",
+                        width: 50,
+                        fit: BoxFit.cover,
+                      ),
+                      Text(
+                        "Interface para lançamento de horas",
+                        style: (platformStore.isMobile
+                                ? Theme.of(context).textTheme.bodySmall
+                                : Theme.of(context).textTheme.bodyMedium)
+                            ?.copyWith(
+                          color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray3,
+                        ),
+                      ),
+                    ],
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "PD Hours",
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      ActionButton(
+                        text: "Lançar horas",
+                        onPressed: () {
+                          print("PRESSED");
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(
+                  text: "Squads",
+                ),
+                Tab(
+                  text: "Usuários",
                 ),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          body: Container(
+            color: Theme.of(context).extension<GrayscaleColorTheme>()?.grayBody,
+            child: TabBarView(
+              controller: _tabController,
+              physics: const AlwaysScrollableScrollPhysics(),
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "PD Hours",
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    ActionButton(
-                      text: "Lançar horas",
-                      onPressed: () {
-                        print("PRESSED");
-                      },
-                    ),
-                  ],
-                ),
+                const SquadsScreen(),
                 Container(),
               ],
             ),
-          ],
-        ),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(
-              text: "Squads",
-            ),
-            Tab(
-              text: "Usuários",
-            ),
-          ],
-        ),
-      ),
-      body: Container(
-        color: Theme.of(context).extension<GrayscaleColorTheme>()?.grayBody,
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            Container(),
-            Container(),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

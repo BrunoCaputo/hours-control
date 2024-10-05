@@ -10,4 +10,16 @@ abstract class _PlatformStore with Store {
 
   @action
   void setIsMobile(bool mobile) => isMobile = mobile;
+
+  @observable
+  bool isFetchingSquads = false;
+
+  @action
+  void setIsFetchingSquads(bool fetching) => isFetchingSquads = fetching;
+
+  @observable
+  List<dynamic> squadList = [];
+
+  @action
+  void setSquadList(List<dynamic> squads) => squadList = squads;
 }
