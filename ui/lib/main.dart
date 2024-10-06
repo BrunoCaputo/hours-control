@@ -96,6 +96,7 @@ class MyApp extends StatelessWidget {
             purple: Color(0xFF7048E8),
             purple2: Color(0xFF5028C6),
             pink: Color(0xFF51CF66),
+            red: Color(0xFFF03D3E),
           ),
           GrayscaleColorTheme(
             black: Color(0xFF212429),
@@ -156,6 +157,7 @@ class MyApp extends StatelessWidget {
             purple: Color(0xFF7048E8),
             purple2: Color(0xFF5028C6),
             pink: Color(0xFF51CF66),
+            red: Color(0xFFF03D3E),
           ),
           GrayscaleColorTheme(
             black: Color(0xFF212429),

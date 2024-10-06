@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/presentation/components/action_button.dart';
 import 'package:hours_control/presentation/components/empty_data.dart';
+import 'package:hours_control/presentation/screens/dialogs/create_squad_dialog.dart';
 import 'package:hours_control/presentation/themes/main_color_theme.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
@@ -181,7 +182,14 @@ class _SquadsScreenState extends State<SquadsScreen> {
                             ),
                             ActionButton(
                               text: "Criar squad",
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return const CreateSquadDialog();
+                                  },
+                                );
+                              },
                             ),
                           ],
                         ),

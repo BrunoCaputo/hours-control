@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
 import 'package:hours_control/presentation/themes/main_color_theme.dart';
+
+final platformStore = GetIt.I.get<PlatformStore>();
 
 enum ButtonVariant {
   primary,
@@ -16,12 +20,14 @@ class ActionButton extends StatelessWidget {
     this.variant = ButtonVariant.primary,
     this.onPressed,
     this.isDisabled = false,
+    this.isLoading = false,
   });
 
   final String text;
   final ButtonVariant variant;
   final VoidCallback? onPressed;
   final bool isDisabled;
+  final bool isLoading;
 
   Color _getBackgroundColor(Set<WidgetState> states, BuildContext context) {
     if (states.contains(WidgetState.disabled)) {
@@ -84,33 +90,50 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isDisabled ? null : onPressed,
-      autofocus: true,
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.resolveWith(
-          (states) => _getBackgroundColor(states, context),
-        ),
-        foregroundColor: WidgetStateProperty.resolveWith(
-          (states) => _getTextColor(states, context),
-        ),
-        side: WidgetStateProperty.resolveWith(
-          (states) => _getBorder(states, context),
-        ),
-        padding: WidgetStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        ),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        elevation: WidgetStateProperty.all(0),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: platformStore.isMobile ? 36 : 48,
+        minWidth: platformStore.isMobile ? 160 : 182,
       ),
-      child: Text(
-        text,
-        style: GoogleFonts.roboto(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+      child: ElevatedButton(
+        onPressed: isDisabled ? null : onPressed,
+        autofocus: true,
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => _getBackgroundColor(states, context),
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => _getTextColor(states, context),
+          ),
+          side: WidgetStateProperty.resolveWith(
+            (states) => _getBorder(states, context),
+          ),
+          padding: WidgetStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          ),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          elevation: WidgetStateProperty.all(0),
         ),
+        child: isLoading
+            ? SizedBox(
+                width: 15,
+                height: 15,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 5,
+                    color: Theme.of(context).extension<MainColorTheme>()?.purple,
+                  ),
+                ),
+              )
+            : Text(
+                text,
+                style: GoogleFonts.roboto(
+                  fontSize: platformStore.isMobile ? 14 : 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
       ),
     );
   }

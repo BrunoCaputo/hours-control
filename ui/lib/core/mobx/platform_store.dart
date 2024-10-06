@@ -22,4 +22,10 @@ abstract class _PlatformStore with Store {
 
   @action
   void setSquadList(List<dynamic> squads) => squadList = squads;
+
+  @observable
+  bool isCreatingSquad = false;
+
+  @action
+  void setIsCreatingSquad(bool creating) => isCreatingSquad = creating;
 }

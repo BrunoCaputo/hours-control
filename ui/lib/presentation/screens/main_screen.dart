@@ -38,6 +38,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         return Scaffold(
           extendBody: true,
           backgroundColor: Colors.white,
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Colors.white,
             toolbarHeight: 110,

@@ -7,6 +7,7 @@ class MainColorTheme extends ThemeExtension<MainColorTheme> {
     required this.purple,
     required this.purple2,
     required this.pink,
+    required this.red,
   });
 
   final Color? blue;
@@ -14,6 +15,7 @@ class MainColorTheme extends ThemeExtension<MainColorTheme> {
   final Color? purple;
   final Color? purple2;
   final Color? pink;
+  final Color? red;
 
   @override
   MainColorTheme copyWith({
@@ -22,6 +24,7 @@ class MainColorTheme extends ThemeExtension<MainColorTheme> {
     Color? purple,
     Color? purple2,
     Color? pink,
+    Color? red,
   }) {
     return MainColorTheme(
       blue: blue ?? this.blue,
@@ -29,6 +32,7 @@ class MainColorTheme extends ThemeExtension<MainColorTheme> {
       purple: purple ?? this.purple,
       purple2: purple2 ?? this.purple2,
       pink: pink ?? this.pink,
+      red: red ?? this.red,
     );
   }
 
@@ -47,6 +51,7 @@ class MainColorTheme extends ThemeExtension<MainColorTheme> {
       purple: Color.lerp(purple, other.purple, t),
       purple2: Color.lerp(purple2, other.purple2, t),
       pink: Color.lerp(pink, other.pink, t),
+      red: Color.lerp(red, other.red, t),
     );
   }
 }
