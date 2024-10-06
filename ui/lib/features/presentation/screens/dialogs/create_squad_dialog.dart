@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
-import 'package:hours_control/presentation/components/action_button.dart';
-import 'package:hours_control/presentation/components/custom_form_field.dart';
-import 'package:hours_control/presentation/components/text_input_field.dart';
-import 'package:hours_control/presentation/components/feedback_snack_bar.dart';
+import 'package:hours_control/features/presentation/components/action_button.dart';
+import 'package:hours_control/features/presentation/components/custom_form_field.dart';
+import 'package:hours_control/features/presentation/components/feedback_snack_bar.dart';
+import 'package:hours_control/features/presentation/components/text_input_field.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
 

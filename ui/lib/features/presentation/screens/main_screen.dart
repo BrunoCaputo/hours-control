@@ -3,11 +3,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
-import 'package:hours_control/presentation/components/action_button.dart';
-import 'package:hours_control/presentation/screens/dialogs/new_report_dialog.dart';
-import 'package:hours_control/presentation/screens/employees_screen.dart';
-import 'package:hours_control/presentation/screens/squads_screen.dart';
-import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
+import 'package:hours_control/features/presentation/components/action_button.dart';
+import 'package:hours_control/features/presentation/screens/dialogs/new_report_dialog.dart';
+import 'package:hours_control/features/presentation/screens/employees_screen.dart';
+import 'package:hours_control/features/presentation/screens/squads_screen.dart';
+import 'package:hours_control/features/presentation/themes/grayscale_color_theme.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
 

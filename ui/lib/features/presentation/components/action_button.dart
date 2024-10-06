@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
-import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
-import 'package:hours_control/presentation/themes/main_color_theme.dart';
+import 'package:hours_control/features/presentation/themes/grayscale_color_theme.dart';
+import 'package:hours_control/features/presentation/themes/main_color_theme.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
 

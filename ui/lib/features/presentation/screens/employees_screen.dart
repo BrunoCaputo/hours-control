@@ -2,62 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
-import 'package:hours_control/presentation/components/action_button.dart';
-import 'package:hours_control/presentation/components/empty_data.dart';
-import 'package:hours_control/presentation/screens/dialogs/create_squad_dialog.dart';
-import 'package:hours_control/presentation/themes/main_color_theme.dart';
+import 'package:hours_control/features/presentation/components/action_button.dart';
+import 'package:hours_control/features/presentation/components/empty_data.dart';
+import 'package:hours_control/features/presentation/screens/dialogs/create_employee_dialog.dart';
+import 'package:hours_control/features/presentation/themes/main_color_theme.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
 
-class SquadsScreen extends StatefulWidget {
-  const SquadsScreen({super.key});
+class EmployeesScreen extends StatefulWidget {
+  const EmployeesScreen({super.key});
 
   @override
-  State<SquadsScreen> createState() => _SquadsScreenState();
+  State<EmployeesScreen> createState() => _EmployeesScreenState();
 }
 
-class _SquadsScreenState extends State<SquadsScreen> {
+class _EmployeesScreenState extends State<EmployeesScreen> {
   late ScrollController _scrollController;
 
-  Future<void> _fetchSquads() async {
+  Future<void> _fetchEmployees() async {
     try {
-      platformStore.setIsFetchingSquads(true);
+      platformStore.setIsFetchingEmployees(true);
       await Future.delayed(const Duration(seconds: 2));
       // TODO: FETCH SQUADS
     } catch (e) {
-      print('Error fetching squads: $e');
+      print('Error fetching employees: $e');
     } finally {
-      platformStore.setIsFetchingSquads(false);
+      platformStore.setIsFetchingEmployees(false);
     }
   }
 
   List<DataRow> _buildTableData() {
     List<DataRow> dataRowList = [];
 
-    for (int i = 0; i < platformStore.squadList.length; i++) {
-      final squad = platformStore.squadList[i];
+    for (int i = 0; i < platformStore.employeeList.length; i++) {
+      final employee = platformStore.employeeList[i];
       dataRowList.add(
         DataRow(
           cells: <DataCell>[
             DataCell(
-              Text(squad.id),
+              Text(employee.name),
             ),
             DataCell(
-              Text(squad.name),
+              Text(employee.estimatedHours),
             ),
             DataCell(
-              platformStore.isMobile
-                  ? IconButton(
-                      onPressed: () {},
-                      color: Theme.of(context).extension<MainColorTheme>()?.blue ?? Colors.blue,
-                      icon: const Icon(
-                        Icons.group,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const ActionButton(
-                      text: "Visitar squad",
-                    ),
+              Text(employee.squadId),
             ),
           ],
         ),
@@ -67,12 +56,40 @@ class _SquadsScreenState extends State<SquadsScreen> {
     return [];
   }
 
+  String _getEmptyText() {
+    if (platformStore.squadList.isEmpty) {
+      return "Nenhuma squad cadastrada. Crie uma squad para começar.";
+    }
+    if (platformStore.employeeList.isEmpty) {
+      return "Nenhum usuário cadastrado. Crie um usuário para começar.";
+    }
+
+    return "";
+  }
+
+  String _getButtonText() {
+    if (platformStore.squadList.isEmpty) {
+      return "Criar squad";
+    }
+
+    return "Criar usuário";
+  }
+
+  Widget _getDialogContent() {
+    // TODO: Implement dialog content based on platformStore.squadList.isEmpty
+    // if (platformStore.squadList.isEmpty) {
+    //   return const CreateSquadDialog();
+    // }
+
+    return const CreateEmployeeDialog();
+  }
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController(initialScrollOffset: 0);
-    if (platformStore.squadList.isEmpty) {
-      _fetchSquads();
+    if (platformStore.squadList.isNotEmpty && platformStore.employeeList.isEmpty) {
+      _fetchEmployees();
     }
   }
 
@@ -89,7 +106,7 @@ class _SquadsScreenState extends State<SquadsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Lista de Squads",
+                "Lista de Usuários",
                 style: platformStore.isMobile
                     ? Theme.of(context).textTheme.headlineSmall
                     : Theme.of(context).textTheme.headlineMedium,
@@ -105,7 +122,7 @@ class _SquadsScreenState extends State<SquadsScreen> {
                       ? const EdgeInsets.symmetric(horizontal: 8, vertical: 10)
                       : const EdgeInsets.symmetric(horizontal: 32, vertical: 64),
                   width: MediaQuery.of(context).size.width,
-                  child: platformStore.isFetchingSquads
+                  child: platformStore.isFetchingEmployees
                       ? Center(
                           child: CircularProgressIndicator(
                             color:
@@ -118,11 +135,11 @@ class _SquadsScreenState extends State<SquadsScreen> {
                           children: [
                             Expanded(
                               flex: 1,
-                              child: platformStore.squadList.isEmpty
-                                  ? const Center(
+                              child: platformStore.squadList.isEmpty ||
+                                      platformStore.employeeList.isEmpty
+                                  ? Center(
                                       child: EmptyData(
-                                        emptyText:
-                                            "Nenhuma squad cadastrada. Crie uma squad para começar.",
+                                        emptyText: _getEmptyText(),
                                       ),
                                     )
                                   : SingleChildScrollView(
@@ -154,14 +171,6 @@ class _SquadsScreenState extends State<SquadsScreen> {
                                               headingRowAlignment: MainAxisAlignment.start,
                                               label: Expanded(
                                                 child: Text(
-                                                  'ID',
-                                                ),
-                                              ),
-                                            ),
-                                            DataColumn(
-                                              headingRowAlignment: MainAxisAlignment.start,
-                                              label: Expanded(
-                                                child: Text(
                                                   'Nome',
                                                 ),
                                               ),
@@ -170,7 +179,15 @@ class _SquadsScreenState extends State<SquadsScreen> {
                                               headingRowAlignment: MainAxisAlignment.start,
                                               label: Expanded(
                                                 child: Text(
-                                                  '',
+                                                  'Horas',
+                                                ),
+                                              ),
+                                            ),
+                                            DataColumn(
+                                              headingRowAlignment: MainAxisAlignment.start,
+                                              label: Expanded(
+                                                child: Text(
+                                                  'Squad ID',
                                                 ),
                                               ),
                                             ),
@@ -181,12 +198,12 @@ class _SquadsScreenState extends State<SquadsScreen> {
                                     ),
                             ),
                             ActionButton(
-                              text: "Criar squad",
+                              text: _getButtonText(),
                               onPressed: () {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return const CreateSquadDialog();
+                                    return _getDialogContent();
                                   },
                                 );
                               },

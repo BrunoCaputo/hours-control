@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
-import 'package:hours_control/presentation/themes/main_color_theme.dart';
+import 'package:hours_control/features/presentation/themes/grayscale_color_theme.dart';
+import 'package:hours_control/features/presentation/themes/main_color_theme.dart';
 
 class SelectInputField<T> extends StatelessWidget {
   const SelectInputField({
