@@ -5,7 +5,7 @@ import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/presentation/components/action_button.dart';
 import 'package:hours_control/presentation/components/custom_form_field.dart';
 import 'package:hours_control/presentation/components/text_input_field.dart';
-import 'package:hours_control/presentation/screens/feedback_snack_bar.dart';
+import 'package:hours_control/presentation/components/feedback_snack_bar.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
 
@@ -80,6 +80,7 @@ class _CreateSquadDialogState extends State<CreateSquadDialog> {
             fieldText: "Nome da Squad",
             child: TextInputField(
               controller: _squadNameController,
+              placeholder: "Digite o nome da squad",
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "A squad deve ter algum nome!";

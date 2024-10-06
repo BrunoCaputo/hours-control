@@ -2,38 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
 import 'package:hours_control/presentation/themes/main_color_theme.dart';
 
-class TextInputField extends StatelessWidget {
-  const TextInputField({
+class SelectInputField<T> extends StatelessWidget {
+  const SelectInputField({
     super.key,
-    this.controller,
-    this.keyboardType = TextInputType.text,
-    this.initialValue,
-    this.onFieldSubmitted,
+    required this.items,
+    required this.onChanged,
     this.placeholder,
-    this.readOnly = false,
+    this.selectedItem,
     this.validator,
   });
 
-  final TextEditingController? controller;
-  final TextInputType keyboardType;
-  final String? initialValue;
-  final void Function(String)? onFieldSubmitted;
+  final List<DropdownMenuItem<T>>? items;
+  final void Function(T?)? onChanged;
   final String? placeholder;
-  final bool readOnly;
-  final String? Function(String?)? validator;
+  final T? selectedItem;
+  final String? Function(T?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: 56,
-      child: TextFormField(
-        keyboardType: keyboardType,
+      child: DropdownButtonFormField<T>(
         validator: validator,
-        controller: controller,
-        initialValue: initialValue,
-        readOnly: readOnly,
-        onFieldSubmitted: onFieldSubmitted,
+        elevation: 0,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -77,6 +69,9 @@ class TextInputField extends StatelessWidget {
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray4,
             ),
+        onChanged: onChanged,
+        value: selectedItem,
+        items: items,
       ),
     );
   }

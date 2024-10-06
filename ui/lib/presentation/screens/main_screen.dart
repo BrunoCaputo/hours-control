@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/presentation/components/action_button.dart';
+import 'package:hours_control/presentation/screens/employees_screen.dart';
 import 'package:hours_control/presentation/screens/squads_screen.dart';
 import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
 
@@ -105,9 +106,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             child: TabBarView(
               controller: _tabController,
               physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                const SquadsScreen(),
-                Container(),
+              children: const [
+                SquadsScreen(),
+                EmployeesScreen(),
               ],
             ),
           ),

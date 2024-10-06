@@ -28,4 +28,22 @@ abstract class _PlatformStore with Store {
 
   @action
   void setIsCreatingSquad(bool creating) => isCreatingSquad = creating;
+
+  @observable
+  bool isFetchingEmployees = false;
+
+  @action
+  void setIsFetchingEmployees(bool fetching) => isFetchingEmployees = fetching;
+
+  @observable
+  List<dynamic> employeeList = [];
+
+  @action
+  void setEmployeeList(List<dynamic> employees) => employeeList = employees;
+
+  @observable
+  bool isCreatingEmployee = false;
+
+  @action
+  void setIsCreatingEmployee(bool creating) => isCreatingEmployee = creating;
 }
