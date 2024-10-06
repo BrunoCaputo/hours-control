@@ -10,29 +10,29 @@ import 'package:hours_control/presentation/components/text_input_field.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
 
-class CreateEmployeeDialog extends StatefulWidget {
-  const CreateEmployeeDialog({super.key});
+class NewReportDialog extends StatefulWidget {
+  const NewReportDialog({super.key});
 
   @override
-  State<CreateEmployeeDialog> createState() => _CreateEmployeeDialogState();
+  State<NewReportDialog> createState() => _NewReportDialogState();
 }
 
-class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
+class _NewReportDialogState extends State<NewReportDialog> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _employeeNameController = TextEditingController();
-  final TextEditingController _employeeEstimatedHoursController = TextEditingController();
-  final ValueNotifier<int?> _employeeSquadId = ValueNotifier<int?>(null);
+  final ValueNotifier<int?> _reportEmployeeId = ValueNotifier<int?>(null);
+  final TextEditingController _reportSpentHours = TextEditingController();
+  final TextEditingController _reportDescription = TextEditingController();
 
-  List<DropdownMenuItem<dynamic>> _getSquadItems() {
-    List<DropdownMenuItem<dynamic>> squads = platformStore.squadList.map((squad) {
+  List<DropdownMenuItem<dynamic>> _getEmployeetems() {
+    List<DropdownMenuItem<dynamic>> employees = platformStore.employeeList.map((squad) {
       return DropdownMenuItem<dynamic>(
         value: squad.id,
         child: Text("${squad.id} - ${squad.name}"),
       );
     }).toList();
 
-    if (squads.isNotEmpty) {
-      _employeeSquadId.value = squads.first.value;
+    if (employees.isNotEmpty) {
+      _reportEmployeeId.value = employees.first.value;
     }
 
     return [];
@@ -57,27 +57,26 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
           title: SizedBox(
             width: platformStore.isMobile ? MediaQuery.of(context).size.width * 0.75 : 415,
             child: const Text(
-              "Criar Usuário",
+              "Criar lançamento",
               textAlign: TextAlign.center,
             ),
           ),
           actionsAlignment: MainAxisAlignment.center,
           actionsPadding: const EdgeInsets.only(top: 32, bottom: 64),
-          actionsOverflowAlignment: OverflowBarAlignment.center,
           actions: [
             ActionButton(
-              text: "Criar usuário",
-              isDisabled: platformStore.isCreatingEmployee,
-              isLoading: platformStore.isCreatingEmployee,
+              text: "Criar lançamento",
+              isDisabled: platformStore.isCreatingSquad,
+              isLoading: platformStore.isCreatingSquad,
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  platformStore.setIsCreatingEmployee(true);
+                  platformStore.setIsCreatingSquad(true);
                   try {
                     await Future.delayed(const Duration(seconds: 2), () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         FeedbackSnackBar.build(
                           context,
-                          message: "Usuário criado!",
+                          message: "Horas lançadas!",
                           type: SnackbarType.success,
                         ),
                       );
@@ -86,7 +85,7 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                   } catch (error) {
                     print("ERROR: $error");
                   } finally {
-                    platformStore.setIsCreatingEmployee(false);
+                    platformStore.setIsCreatingSquad(false);
                   }
                 }
               },
@@ -101,36 +100,37 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomFormField(
-                  fieldText: "Nome do Usuário",
-                  child: TextInputField(
-                    controller: _employeeNameController,
-                    placeholder: "Digite o nome do usuário",
+                  fieldText: "ID do Usuário",
+                  child: SelectInputField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "O usuário deve ter algum nome!";
+                        return "O ID do usuário deve ser informado!";
                       }
+
                       return null;
                     },
-                    onFieldSubmitted: (value) {
-                      print("FIELD SUBMITTED: $value");
+                    placeholder: "Selecione um usuário",
+                    items: _getEmployeetems(),
+                    onChanged: (dynamic value) {
+                      print(value);
                     },
                   ),
                 ),
                 const SizedBox(height: 32),
                 CustomFormField(
-                  fieldText: "Horas estimadas de trabalho",
+                  fieldText: "Horas Gastas",
                   child: TextInputField(
-                    controller: _employeeEstimatedHoursController,
+                    controller: _reportSpentHours,
                     keyboardType: TextInputType.number,
                     placeholder: "Digite a quantidade de horas",
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "O usuário deve ter uma estimativa de horas!";
+                        return "A hora gasta deve ser informada!";
                       }
 
                       int numericValue = int.parse(value);
-                      if (numericValue < 1 && numericValue > 12) {
-                        return "As horas estimadas devem estar entre 1 e 12!";
+                      if (numericValue < 0) {
+                        return "Deve ser registrada pelo menos 1 hora";
                       }
 
                       return null;
@@ -142,19 +142,21 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                 ),
                 const SizedBox(height: 32),
                 CustomFormField(
-                  fieldText: "Squad",
-                  child: SelectInputField(
+                  fieldText: "descrição",
+                  child: TextInputField(
+                    controller: _reportDescription,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    placeholder: "Digite a descrição",
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "O usuário deve estar em uma squad!";
+                        return "A descrição deve ser informada!";
                       }
 
                       return null;
                     },
-                    placeholder: "Selecione uma Squad",
-                    items: _getSquadItems(),
-                    onChanged: (dynamic value) {
-                      _employeeSquadId.value = value.id;
+                    onFieldSubmitted: (value) {
+                      print("FIELD SUBMITTED: $value");
                     },
                   ),
                 ),

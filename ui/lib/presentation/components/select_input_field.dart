@@ -22,11 +22,11 @@ class SelectInputField<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 56,
       child: DropdownButtonFormField<T>(
         validator: validator,
         elevation: 0,
         decoration: InputDecoration(
+          constraints: const BoxConstraints(minHeight: 56),
           border: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(

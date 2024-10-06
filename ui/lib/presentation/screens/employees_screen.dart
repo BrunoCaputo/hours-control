@@ -77,6 +77,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   }
 
   Widget _getDialogContent() {
+    // TODO: Implement dialog content based on platformStore.squadList.isEmpty
     // if (platformStore.squadList.isEmpty) {
     //   return const CreateSquadDialog();
     // }

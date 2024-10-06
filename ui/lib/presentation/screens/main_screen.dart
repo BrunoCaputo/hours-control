@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/presentation/components/action_button.dart';
+import 'package:hours_control/presentation/screens/dialogs/new_report_dialog.dart';
 import 'package:hours_control/presentation/screens/employees_screen.dart';
 import 'package:hours_control/presentation/screens/squads_screen.dart';
 import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
@@ -81,7 +82,12 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                       ActionButton(
                         text: "Lançar horas",
                         onPressed: () {
-                          print("PRESSED");
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const NewReportDialog();
+                            },
+                          );
                         },
                       ),
                     ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hours_control/presentation/themes/grayscale_color_theme.dart';
 import 'package:hours_control/presentation/themes/main_color_theme.dart';
 
@@ -8,6 +9,7 @@ class TextInputField extends StatelessWidget {
     this.controller,
     this.keyboardType = TextInputType.text,
     this.initialValue,
+    this.maxLines = 1,
     this.onFieldSubmitted,
     this.placeholder,
     this.readOnly = false,
@@ -17,6 +19,7 @@ class TextInputField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final String? initialValue;
+  final int? maxLines;
   final void Function(String)? onFieldSubmitted;
   final String? placeholder;
   final bool readOnly;
@@ -26,7 +29,6 @@ class TextInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 56,
       child: TextFormField(
         keyboardType: keyboardType,
         validator: validator,
@@ -34,7 +36,14 @@ class TextInputField extends StatelessWidget {
         initialValue: initialValue,
         readOnly: readOnly,
         onFieldSubmitted: onFieldSubmitted,
+        maxLines: maxLines,
+        inputFormatters: keyboardType == TextInputType.number
+            ? [
+                FilteringTextInputFormatter.digitsOnly,
+              ]
+            : null,
         decoration: InputDecoration(
+          constraints: const BoxConstraints(minHeight: 56, maxHeight: 2 * 56),
           border: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(
