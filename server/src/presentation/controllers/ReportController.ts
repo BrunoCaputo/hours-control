@@ -16,6 +16,10 @@ interface IGetReportsBySquadParams {
   squad_id: number;
 }
 
+interface IGetReportsBySquadQueryParams {
+  period: number;
+}
+
 export class ReportController {
   private createReport: CreateReportUseCase;
   private getReports: GetReportsBySquadIdUseCase;
@@ -46,7 +50,8 @@ export class ReportController {
   async getBySquadId(request: FastifyRequest): Promise<{ reports: Report[] }> {
     try {
       const { squad_id: squadId } = request.params as IGetReportsBySquadParams;
-      return await this.getReports.call({ squadId });
+      const { period } = request.query as IGetReportsBySquadQueryParams;
+      return await this.getReports.call({ squadId, period });
     } catch (error) {
       console.error("Failed to get reports by squad ID.", error);
       throw error;

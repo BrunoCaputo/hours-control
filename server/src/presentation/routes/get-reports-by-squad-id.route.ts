@@ -10,11 +10,16 @@ export const getReportsBySquadIdRoute: FastifyPluginAsyncZod = async (app) => {
     squad_id: z.coerce.number().int(),
   });
 
+  const querySchema = z.object({
+    period: z.coerce.number().int().min(1),
+  });
+
   app.get(
     "/report/:squad_id",
     {
       schema: {
         params: paramsSchema,
+        querystring: querySchema,
       },
     },
     controller.getBySquadId.bind(controller)
