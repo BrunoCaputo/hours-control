@@ -10,6 +10,7 @@ class TextInputField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.initialValue,
     this.maxLines = 1,
+    this.onChanged,
     this.onFieldSubmitted,
     this.placeholder,
     this.readOnly = false,
@@ -20,6 +21,7 @@ class TextInputField extends StatelessWidget {
   final TextInputType keyboardType;
   final String? initialValue;
   final int? maxLines;
+  final void Function(String)? onChanged;
   final void Function(String)? onFieldSubmitted;
   final String? placeholder;
   final bool readOnly;
@@ -37,6 +39,7 @@ class TextInputField extends StatelessWidget {
         readOnly: readOnly,
         onFieldSubmitted: onFieldSubmitted,
         maxLines: maxLines,
+        onChanged: onChanged,
         inputFormatters: keyboardType == TextInputType.number
             ? [
                 FilteringTextInputFormatter.digitsOnly,

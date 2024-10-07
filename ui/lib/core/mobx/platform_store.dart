@@ -1,5 +1,7 @@
 import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/entities/report_entity.dart';
 import 'package:hours_control/features/domain/entities/squad_entity.dart';
+import 'package:hours_control/features/domain/models/squad_member_hours.dart';
 import 'package:mobx/mobx.dart';
 
 part 'platform_store.g.dart';
@@ -72,4 +74,16 @@ abstract class _PlatformStore with Store {
 
   @action
   void setIsFetchingSquadMemberHours(bool fetching) => isFetchingSquadMemberHours = fetching;
+
+  @observable
+  List<ReportEntity> squadReportsList = [];
+
+  @action
+  void setSquadReportsList(List<ReportEntity> reports) => squadReportsList = reports;
+
+  @observable
+  List<SquadMemberHours> squadMemberHoursList = [];
+
+  @action
+  void setSquadMemberHoursList(List<SquadMemberHours> hours) => squadMemberHoursList = hours;
 }

@@ -22,4 +22,20 @@ class ReportRepositoryImpl implements ReportRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<List<ReportEntity>> getReportsBySquadId({
+    required int squadId,
+    required int period,
+  }) async {
+    try {
+      List<ReportEntity> reports = await _reportDataSource.getReportsBySquadId(
+        squadId: squadId,
+        period: period,
+      );
+      return reports;
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

@@ -10,6 +10,11 @@ abstract class ReportDataSource {
     required int employeeId,
     required int spentHours,
   });
+
+  Future<List<ReportEntity>> getReportsBySquadId({
+    required int squadId,
+    required int period,
+  });
 }
 
 class ReportDataSourceImpl implements ReportDataSource {
@@ -39,6 +44,31 @@ class ReportDataSourceImpl implements ReportDataSource {
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
         ReportEntity result = ReportEntity.fromJson(data);
+        return result;
+      } else {
+        throw Exception('Failed to create report');
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ReportEntity>> getReportsBySquadId({
+    required int squadId,
+    required int period,
+  }) async {
+    Uri url = Uri.parse("$serverApiBaseUrl/report/$squadId?period=$period");
+
+    try {
+      var response = await http.get(url, headers: header);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        List<ReportEntity> result = List.from(data['reports'] ?? [])
+            .map(
+              (report) => ReportEntity.fromJson(report),
+            )
+            .toList();
         return result;
       } else {
         throw Exception('Failed to create report');

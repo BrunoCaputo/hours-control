@@ -3,7 +3,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/entities/report_entity.dart';
 import 'package:hours_control/features/domain/entities/squad_entity.dart';
+import 'package:hours_control/features/domain/models/squad_member_hours.dart';
+import 'package:hours_control/features/domain/usecases/get_reports_by_squad_id.dart';
+import 'package:hours_control/features/domain/usecases/get_squad_member_hours.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/components/empty_data.dart';
 import 'package:hours_control/features/presentation/components/icon_button.dart';
@@ -11,7 +15,9 @@ import 'package:hours_control/features/presentation/components/select_input_fiel
 import 'package:hours_control/features/presentation/components/text_input_field.dart';
 import 'package:hours_control/features/presentation/screens/dialogs/create_employee_dialog.dart';
 import 'package:hours_control/features/presentation/themes/main_color_theme.dart';
-import 'package:hours_control/shared/period_options.dart';
+import 'package:hours_control/shared/utils/get_employee_by_id_from_list.dart';
+import 'package:hours_control/shared/utils/period_options.dart';
+import 'package:intl/intl.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
 
@@ -33,7 +39,7 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
     super.initState();
     _scrollController = ScrollController(initialScrollOffset: 0);
     squad = platformStore.selectedSquad!;
-    _fetchSquadMembersHours();
+    _fetchSquadMembersReports();
   }
 
   String _getEmptyText() {
@@ -55,7 +61,10 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
     return periods;
   }
 
-  Future<void> _fetchSquadMembersHours() async {
+  Future<void> _fetchSquadMembersReports() async {
+    final GetReportsBySquadIdUseCase getReportsBySquadId =
+        GetIt.I.get<GetReportsBySquadIdUseCase>();
+
     try {
       List<EmployeeEntity> squadUsers = platformStore.employeeList
           .where(
@@ -67,9 +76,17 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
 
       if (squadUsers.isNotEmpty) {
         platformStore.setIsFetchingSquadMemberHours(true);
+        List<ReportEntity> squadReports = await getReportsBySquadId.call(
+          params: {
+            "squadId": squad.id.toString(),
+            "period": _period.value.toString(),
+          },
+        );
+
+        platformStore.setSquadReportsList(squadReports);
       }
     } catch (error) {
-      print("Error fetching squad members hours: $error");
+      print("Error on load squad members hours: $error");
     } finally {
       platformStore.setIsFetchingSquadMemberHours(false);
     }
@@ -77,46 +94,40 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
 
   List<DataRow> _buildTableData() {
     List<DataRow> dataRowList = [];
+    List<ReportEntity> reports = platformStore.squadReportsList;
 
-    // for (int i = 0; i < platformStore.squadList.length; i++) {
-    //   final squad = platformStore.squadList[i];
-    //
-    //   onPressed() {
-    //     platformStore.setSelectedSquad(squad);
-    //   }
-    //
-    //   dataRowList.add(
-    //     DataRow(
-    //       cells: <DataCell>[
-    //         DataCell(
-    //           Text(squad.id.toString()),
-    //         ),
-    //         DataCell(
-    //           Text(squad.name),
-    //         ),
-    //         DataCell(
-    //           Align(
-    //             alignment: Alignment.centerRight,
-    //             child: platformStore.isMobile
-    //                 ? CustomIconButton(
-    //                     onPressed: onPressed,
-    //                     tooltip: "Visitar squad",
-    //                     icon: const Icon(
-    //                       Icons.group,
-    //                       color: Colors.white,
-    //                     ),
-    //                   )
-    //                 : ActionButton(
-    //                     text: "Visitar squad",
-    //                     onPressed: onPressed,
-    //                     height: 33,
-    //                   ),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
+    for (int i = 0; i < reports.length; i++) {
+      final report = reports[i];
+      final EmployeeEntity? employee = getEmployeeByIdFromList(
+        platformStore.employeeList,
+        report.employeeId,
+      );
+
+      if (employee == null) {
+        continue;
+      }
+
+      dataRowList.add(
+        DataRow(
+          cells: <DataCell>[
+            DataCell(
+              Text(employee.name),
+            ),
+            DataCell(
+              Text(report.description.replaceAll("\n", " ")),
+            ),
+            DataCell(
+              Text(report.spentHours.toString()),
+            ),
+            DataCell(
+              Text(DateFormat('dd/MM/yyyy').format(
+                report.createdAt.toLocal(),
+              )),
+            ),
+          ],
+        ),
+      );
+    }
 
     return dataRowList;
   }
@@ -144,6 +155,7 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                     tooltip: "Back to squad list",
                     onPressed: () {
                       platformStore.setSelectedSquad(null);
+                      platformStore.setSquadReportsList([]);
                     },
                   ),
                   const SizedBox(width: 24),
@@ -198,6 +210,13 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                               controller: _customPeriod,
                               keyboardType: TextInputType.number,
                               placeholder: "Período customizado",
+                              onChanged: (value) {
+                                if (value.isNotEmpty) {
+                                  setState(() {
+                                    _period.value = int.parse(value);
+                                  });
+                                }
+                              },
                             ),
                           const SizedBox(height: 15),
                           ActionButton(
@@ -237,50 +256,57 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                                             padding: EdgeInsets.zero,
                                             child: SizedBox(
                                               width: MediaQuery.of(context).size.width,
-                                              child: DataTable(
-                                                headingRowColor:
-                                                    WidgetStateProperty.resolveWith<Color>(
-                                                  (Set<WidgetState> states) {
-                                                    return Theme.of(context)
-                                                            .extension<MainColorTheme>()
-                                                            ?.blue ??
-                                                        Colors.blue;
-                                                  },
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                keyboardDismissBehavior:
+                                                    ScrollViewKeyboardDismissBehavior.onDrag,
+                                                physics: const AlwaysScrollableScrollPhysics(),
+                                                padding: EdgeInsets.zero,
+                                                child: DataTable(
+                                                  headingRowColor:
+                                                      WidgetStateProperty.resolveWith<Color>(
+                                                    (Set<WidgetState> states) {
+                                                      return Theme.of(context)
+                                                              .extension<MainColorTheme>()
+                                                              ?.blue ??
+                                                          Colors.blue;
+                                                    },
+                                                  ),
+                                                  headingTextStyle: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  dataTextStyle:
+                                                      Theme.of(context).textTheme.bodyMedium,
+                                                  columns: const <DataColumn>[
+                                                    DataColumn(
+                                                      headingRowAlignment: MainAxisAlignment.start,
+                                                      label: Expanded(
+                                                        child: Text('Membro'),
+                                                      ),
+                                                    ),
+                                                    DataColumn(
+                                                      headingRowAlignment: MainAxisAlignment.start,
+                                                      label: Expanded(
+                                                        child: Text('Descrição'),
+                                                      ),
+                                                    ),
+                                                    DataColumn(
+                                                      headingRowAlignment: MainAxisAlignment.start,
+                                                      label: Expanded(
+                                                        child: Text('Horas'),
+                                                      ),
+                                                    ),
+                                                    DataColumn(
+                                                      headingRowAlignment: MainAxisAlignment.start,
+                                                      label: Expanded(
+                                                        child: Text('Criado em'),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                  rows: _buildTableData(),
                                                 ),
-                                                headingTextStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                dataTextStyle:
-                                                    Theme.of(context).textTheme.bodyMedium,
-                                                columns: const <DataColumn>[
-                                                  DataColumn(
-                                                    headingRowAlignment: MainAxisAlignment.start,
-                                                    label: Expanded(
-                                                      child: Text('Membro'),
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    headingRowAlignment: MainAxisAlignment.start,
-                                                    label: Expanded(
-                                                      child: Text('Descrição'),
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    headingRowAlignment: MainAxisAlignment.start,
-                                                    label: Expanded(
-                                                      child: Text('Horas'),
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    headingRowAlignment: MainAxisAlignment.start,
-                                                    label: Expanded(
-                                                      child: Text('Criado em'),
-                                                    ),
-                                                  ),
-                                                ],
-                                                rows: _buildTableData(),
                                               ),
                                             ),
                                           ),

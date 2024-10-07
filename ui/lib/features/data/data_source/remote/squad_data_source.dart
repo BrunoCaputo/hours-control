@@ -8,6 +8,11 @@ abstract class SquadDataSource {
   Future<List<SquadEntity>> fetchSquads();
 
   Future<SquadEntity> createSquad({required String name});
+
+  Future<Map<String, Map<String, int>>> getMemberHours({
+    required int squadId,
+    required int period,
+  });
 }
 
 class SquadDataSourceImpl implements SquadDataSource {
@@ -54,6 +59,36 @@ class SquadDataSourceImpl implements SquadDataSource {
         return result;
       } else {
         throw Exception('Failed to create squad');
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Map<String, Map<String, int>>> getMemberHours({
+    required int squadId,
+    required int period,
+  }) async {
+    Uri url = Uri.parse(
+      "$serverApiBaseUrl/squad/hours/bymember?squad_id=$squadId&period=$period",
+    );
+
+    try {
+      var response = await http.get(url, headers: header);
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body) as Map<String, dynamic>;
+
+        Map<String, Map<String, int>> typedMap = data.map((key, value) {
+          return MapEntry(
+            key,
+            Map<String, int>.from(value as Map),
+          );
+        });
+
+        return typedMap;
+      } else {
+        throw Exception('Failed to get squad members hours');
       }
     } catch (error) {
       rethrow;
