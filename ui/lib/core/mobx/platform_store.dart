@@ -1,3 +1,4 @@
+import 'package:hours_control/features/domain/entities/squad_entity.dart';
 import 'package:mobx/mobx.dart';
 
 part 'platform_store.g.dart';
@@ -18,10 +19,10 @@ abstract class _PlatformStore with Store {
   void setIsFetchingSquads(bool fetching) => isFetchingSquads = fetching;
 
   @observable
-  List<dynamic> squadList = [];
+  List<SquadEntity> squadList = [];
 
   @action
-  void setSquadList(List<dynamic> squads) => squadList = squads;
+  void setSquadList(List<SquadEntity> squads) => squadList = squads;
 
   @observable
   bool isCreatingSquad = false;

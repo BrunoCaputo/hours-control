@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
+import 'package:hours_control/features/domain/entities/squad_entity.dart';
+import 'package:hours_control/features/domain/usecases/fetch_squads.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/components/empty_data.dart';
+import 'package:hours_control/features/presentation/components/icon_button.dart';
 import 'package:hours_control/features/presentation/screens/dialogs/create_squad_dialog.dart';
 import 'package:hours_control/features/presentation/themes/main_color_theme.dart';
 
@@ -20,10 +23,13 @@ class _SquadsScreenState extends State<SquadsScreen> {
   late ScrollController _scrollController;
 
   Future<void> _fetchSquads() async {
+    final FetchSquadsUseCase fetchSquadsUseCase = GetIt.I.get<FetchSquadsUseCase>();
+
     try {
       platformStore.setIsFetchingSquads(true);
-      await Future.delayed(const Duration(seconds: 2));
-      // TODO: FETCH SQUADS
+      List<SquadEntity> squads = await fetchSquadsUseCase.call();
+      print("SQUADS: ${squads.toString()}");
+      platformStore.setSquadList(squads);
     } catch (e) {
       print('Error fetching squads: $e');
     } finally {
@@ -36,35 +42,41 @@ class _SquadsScreenState extends State<SquadsScreen> {
 
     for (int i = 0; i < platformStore.squadList.length; i++) {
       final squad = platformStore.squadList[i];
+      print("SQUAD: ${squad.toString()}");
       dataRowList.add(
         DataRow(
           cells: <DataCell>[
             DataCell(
-              Text(squad.id),
+              Text(squad.id.toString()),
             ),
             DataCell(
               Text(squad.name),
             ),
             DataCell(
-              platformStore.isMobile
-                  ? IconButton(
-                      onPressed: () {},
-                      color: Theme.of(context).extension<MainColorTheme>()?.blue ?? Colors.blue,
-                      icon: const Icon(
-                        Icons.group,
-                        color: Colors.white,
+              Align(
+                alignment: Alignment.centerRight,
+                child: platformStore.isMobile
+                    ? CustomIconButton(
+                        onPressed: () {
+                          print("CLICK");
+                        },
+                        tooltip: "Visitar squad",
+                        icon: const Icon(
+                          Icons.group,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const ActionButton(
+                        text: "Visitar squad",
                       ),
-                    )
-                  : const ActionButton(
-                      text: "Visitar squad",
-                    ),
+              ),
             ),
           ],
         ),
       );
     }
 
-    return [];
+    return dataRowList;
   }
 
   @override
@@ -167,12 +179,8 @@ class _SquadsScreenState extends State<SquadsScreen> {
                                               ),
                                             ),
                                             DataColumn(
-                                              headingRowAlignment: MainAxisAlignment.start,
-                                              label: Expanded(
-                                                child: Text(
-                                                  '',
-                                                ),
-                                              ),
+                                              headingRowAlignment: MainAxisAlignment.end,
+                                              label: Text(''),
                                             ),
                                           ],
                                           rows: _buildTableData(),
