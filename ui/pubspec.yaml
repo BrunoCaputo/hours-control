@@ -12,6 +12,13 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.10+1
+  get_it: ^8.0.0
+  mobx: ^2.3.3+2
+  mobx_codegen: ^2.6.1
+  flutter_mobx: ^2.2.1+1
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

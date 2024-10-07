@@ -88,6 +88,12 @@ lib/generated_plugin_registrant.dart
 # See https://dart.dev/guides/libraries/private-files#pubspeclock
 #pubspec.lock
 
+# Mobx platform store
+**/platform_store.g.dart
+
+# Mock tests
+test/**/*.mocks.dart
+
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
