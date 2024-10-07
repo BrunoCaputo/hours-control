@@ -115,7 +115,6 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 32),
           content: Form(
             key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,

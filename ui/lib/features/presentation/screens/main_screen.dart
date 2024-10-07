@@ -3,6 +3,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
+import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/entities/squad_entity.dart';
+import 'package:hours_control/features/domain/usecases/fetch_employees.dart';
+import 'package:hours_control/features/domain/usecases/fetch_squads.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/screens/dialogs/new_report_dialog.dart';
 import 'package:hours_control/features/presentation/screens/employees_screen.dart';
@@ -26,6 +30,39 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
+
+    Future.wait([
+      _fetchSquads(),
+      _fetchEmployees(),
+    ]);
+  }
+
+  Future<void> _fetchEmployees() async {
+    final FetchEmployeesUseCase fetchEmployeesUseCase = GetIt.I.get<FetchEmployeesUseCase>();
+
+    try {
+      platformStore.setIsFetchingEmployees(true);
+      List<EmployeeEntity> employees = await fetchEmployeesUseCase.call();
+      platformStore.setEmployeeList(employees);
+    } catch (e) {
+      print('Error fetching employees: $e');
+    } finally {
+      platformStore.setIsFetchingEmployees(false);
+    }
+  }
+
+  Future<void> _fetchSquads() async {
+    final FetchSquadsUseCase fetchSquadsUseCase = GetIt.I.get<FetchSquadsUseCase>();
+
+    try {
+      platformStore.setIsFetchingSquads(true);
+      List<SquadEntity> squads = await fetchSquadsUseCase.call();
+      platformStore.setSquadList(squads);
+    } catch (e) {
+      print('Error fetching squads: $e');
+    } finally {
+      platformStore.setIsFetchingSquads(false);
+    }
   }
 
   @override

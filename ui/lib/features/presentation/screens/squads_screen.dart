@@ -22,20 +22,6 @@ class SquadsScreen extends StatefulWidget {
 class _SquadsScreenState extends State<SquadsScreen> {
   late ScrollController _scrollController;
 
-  Future<void> _fetchSquads() async {
-    final FetchSquadsUseCase fetchSquadsUseCase = GetIt.I.get<FetchSquadsUseCase>();
-
-    try {
-      platformStore.setIsFetchingSquads(true);
-      List<SquadEntity> squads = await fetchSquadsUseCase.call();
-      platformStore.setSquadList(squads);
-    } catch (e) {
-      print('Error fetching squads: $e');
-    } finally {
-      platformStore.setIsFetchingSquads(false);
-    }
-  }
-
   List<DataRow> _buildTableData() {
     List<DataRow> dataRowList = [];
 
@@ -86,9 +72,6 @@ class _SquadsScreenState extends State<SquadsScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController(initialScrollOffset: 0);
-    if (platformStore.squadList.isEmpty) {
-      _fetchSquads();
-    }
   }
 
   @override

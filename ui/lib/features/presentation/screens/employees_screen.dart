@@ -22,20 +22,6 @@ class EmployeesScreen extends StatefulWidget {
 class _EmployeesScreenState extends State<EmployeesScreen> {
   late ScrollController _scrollController;
 
-  Future<void> _fetchEmployees() async {
-    final FetchEmployeesUseCase fetchEmployeesUseCase = GetIt.I.get<FetchEmployeesUseCase>();
-
-    try {
-      platformStore.setIsFetchingEmployees(true);
-      List<EmployeeEntity> employees = await fetchEmployeesUseCase.call();
-      platformStore.setEmployeeList(employees);
-    } catch (e) {
-      print('Error fetching employees: $e');
-    } finally {
-      platformStore.setIsFetchingEmployees(false);
-    }
-  }
-
   List<DataRow> _buildTableData() {
     List<DataRow> dataRowList = [];
 
@@ -92,9 +78,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController(initialScrollOffset: 0);
-    if (platformStore.squadList.isNotEmpty && platformStore.employeeList.isEmpty) {
-      _fetchEmployees();
-    }
   }
 
   @override
