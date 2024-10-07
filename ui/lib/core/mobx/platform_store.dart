@@ -48,4 +48,10 @@ abstract class _PlatformStore with Store {
 
   @action
   void setIsCreatingEmployee(bool creating) => isCreatingEmployee = creating;
+
+  @observable
+  bool isCreatingReport = false;
+
+  @action
+  void setIsCreatingReport(bool creating) => isCreatingReport = creating;
 }

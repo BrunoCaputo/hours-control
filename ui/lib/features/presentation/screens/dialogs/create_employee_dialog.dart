@@ -169,7 +169,7 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                           ) !=
                           null;
                       if (!squadExists) {
-                        return "O squad inexistente!";
+                        return "Squad inexistente!";
                       }
 
                       return null;
@@ -177,7 +177,6 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                     placeholder: "Selecione uma Squad",
                     items: _getSquadItems(),
                     onChanged: (int? value) {
-                      print(value);
                       _employeeSquadId.value = value;
                     },
                   ),

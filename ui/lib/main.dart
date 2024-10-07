@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/features/domain/usecases/create_employee.dart';
+import 'package:hours_control/features/domain/usecases/create_report.dart';
 import 'package:hours_control/features/domain/usecases/create_squad.dart';
 import 'package:hours_control/features/domain/usecases/fetch_employees.dart';
 import 'package:hours_control/features/domain/usecases/fetch_squads.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
       }
       if (!GetIt.I.isRegistered<CreateEmployeeUseCase>()) {
         GetIt.I.registerSingleton<CreateEmployeeUseCase>(CreateEmployeeUseCase());
+      }
+      if (!GetIt.I.isRegistered<CreateReportUseCase>()) {
+        GetIt.I.registerSingleton<CreateReportUseCase>(CreateReportUseCase());
       }
     } catch (err) {
       throw Exception("Failed to register: $err");

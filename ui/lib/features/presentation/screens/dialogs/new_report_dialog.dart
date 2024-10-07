@@ -1,7 +1,11 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
+import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/usecases/create_report.dart';
+import 'package:hours_control/features/domain/usecases/fetch_employees.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/components/custom_form_field.dart';
 import 'package:hours_control/features/presentation/components/feedback_snack_bar.dart';
@@ -23,11 +27,32 @@ class _NewReportDialogState extends State<NewReportDialog> {
   final TextEditingController _reportSpentHours = TextEditingController();
   final TextEditingController _reportDescription = TextEditingController();
 
-  List<DropdownMenuItem<dynamic>> _getEmployeetems() {
-    List<DropdownMenuItem<dynamic>> employees = platformStore.employeeList.map((squad) {
-      return DropdownMenuItem<dynamic>(
-        value: squad.id,
-        child: Text("${squad.id} - ${squad.name}"),
+  Future<List<EmployeeEntity>> _fetchEmployees() async {
+    final FetchEmployeesUseCase fetchEmployeesUseCase = GetIt.I.get<FetchEmployeesUseCase>();
+
+    try {
+      List<EmployeeEntity> employees = await fetchEmployeesUseCase.call();
+      platformStore.setEmployeeList(employees);
+
+      return employees;
+    } catch (e) {
+      print('Error fetching employees: $e');
+      return [];
+    }
+  }
+
+  List<DropdownMenuItem<int>> _getEmployeetems() {
+    List<EmployeeEntity> employeeList = [];
+
+    if (platformStore.employeeList.isEmpty) {
+    } else {
+      employeeList = platformStore.employeeList;
+    }
+
+    List<DropdownMenuItem<int>> employees = employeeList.map((employee) {
+      return DropdownMenuItem<int>(
+        value: employee.id,
+        child: Text("${employee.id} - ${employee.name}"),
       );
     }).toList();
 
@@ -35,7 +60,37 @@ class _NewReportDialogState extends State<NewReportDialog> {
       _reportEmployeeId.value = employees.first.value;
     }
 
-    return [];
+    return employees;
+  }
+
+  Future<void> _handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      Map<String, String> newReport = {
+        "description": _reportDescription.text,
+        "spentHours": _reportSpentHours.text,
+        "employeeId": _reportEmployeeId.value.toString(),
+      };
+      final CreateReportUseCase createReportUseCase = GetIt.I.get<CreateReportUseCase>();
+
+      platformStore.setIsCreatingReport(true);
+      try {
+        await createReportUseCase.call(
+          params: newReport,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          FeedbackSnackBar.build(
+            context,
+            message: "Horas lançadas!",
+            type: SnackbarType.success,
+          ),
+        );
+        Navigator.of(context).pop();
+      } catch (error) {
+        print("ERROR: $error");
+      } finally {
+        platformStore.setIsCreatingReport(false);
+      }
+    }
   }
 
   @override
@@ -66,29 +121,9 @@ class _NewReportDialogState extends State<NewReportDialog> {
           actions: [
             ActionButton(
               text: "Criar lançamento",
-              isDisabled: platformStore.isCreatingSquad,
-              isLoading: platformStore.isCreatingSquad,
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  platformStore.setIsCreatingSquad(true);
-                  try {
-                    await Future.delayed(const Duration(seconds: 2), () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        FeedbackSnackBar.build(
-                          context,
-                          message: "Horas lançadas!",
-                          type: SnackbarType.success,
-                        ),
-                      );
-                      Navigator.of(context).pop();
-                    });
-                  } catch (error) {
-                    print("ERROR: $error");
-                  } finally {
-                    platformStore.setIsCreatingSquad(false);
-                  }
-                }
-              },
+              isDisabled: platformStore.isCreatingReport,
+              isLoading: platformStore.isCreatingEmployee,
+              onPressed: _handleSubmit,
             ),
           ],
           contentPadding: const EdgeInsets.symmetric(horizontal: 32),
@@ -103,16 +138,24 @@ class _NewReportDialogState extends State<NewReportDialog> {
                   fieldText: "ID do Usuário",
                   child: SelectInputField(
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.toString().isEmpty) {
                         return "O ID do usuário deve ser informado!";
+                      }
+
+                      bool employeeExists = platformStore.employeeList.firstWhereOrNull(
+                            (employee) => employee.id == value,
+                          ) !=
+                          null;
+                      if (!employeeExists) {
+                        return "Usuário inexistente!";
                       }
 
                       return null;
                     },
                     placeholder: "Selecione um usuário",
                     items: _getEmployeetems(),
-                    onChanged: (dynamic value) {
-                      print(value);
+                    onChanged: (int? value) {
+                      _reportEmployeeId.value = value;
                     },
                   ),
                 ),
@@ -124,12 +167,12 @@ class _NewReportDialogState extends State<NewReportDialog> {
                     keyboardType: TextInputType.number,
                     placeholder: "Digite a quantidade de horas",
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.toString().isEmpty) {
                         return "A hora gasta deve ser informada!";
                       }
 
                       int numericValue = int.parse(value);
-                      if (numericValue < 0) {
+                      if (numericValue <= 0) {
                         return "Deve ser registrada pelo menos 1 hora";
                       }
 

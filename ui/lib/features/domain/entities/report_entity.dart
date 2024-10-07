@@ -13,12 +13,12 @@ class ReportEntity {
     required this.createdAt,
   });
 
-  ReportEntity fromJson(Map<String, dynamic> json) => ReportEntity(
+  factory ReportEntity.fromJson(Map<String, dynamic> json) => ReportEntity(
         id: json['id'],
         description: json['description'],
-        employeeId: json['employee_id'],
-        spentHours: json['spent_hours'],
-        createdAt: DateTime.parse(json['created_at']),
+        employeeId: json['employeeId'],
+        spentHours: json['spentHours'],
+        createdAt: DateTime.parse(json['createdAt']),
       );
 
   Map<String, dynamic> toJson(ReportEntity entity) => {
