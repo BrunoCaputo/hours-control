@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
   void _init() async {
     _checkRegistration();
     try {
-      platformStore.setIsMobile(Platform.isAndroid || Platform.isIOS);
+      platformStore.setIsMobile(!kIsWeb && (Platform.isAndroid || Platform.isIOS));
     } catch (e) {
       print(e.toString());
     }

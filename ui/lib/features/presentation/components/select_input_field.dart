@@ -20,59 +20,56 @@ class SelectInputField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DropdownButtonFormField<T>(
-        validator: validator,
-        elevation: 0,
-        decoration: InputDecoration(
-          constraints: const BoxConstraints(minHeight: 56),
-          border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(
-              width: 1,
-              style: BorderStyle.solid,
-              color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray2 ?? Colors.grey,
-            ),
+    return DropdownButtonFormField<T>(
+      validator: validator,
+      elevation: 0,
+      decoration: InputDecoration(
+        constraints: const BoxConstraints(minHeight: 56),
+        border: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(
+            width: 1,
+            style: BorderStyle.solid,
+            color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray2 ?? Colors.grey,
           ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(
-              width: 1,
-              style: BorderStyle.solid,
-              color: Theme.of(context).extension<MainColorTheme>()?.red ?? Colors.red,
-            ),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(
-              width: 1,
-              style: BorderStyle.solid,
-              color: Theme.of(context).extension<MainColorTheme>()?.red ?? Colors.red,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(
-              width: 1,
-              style: BorderStyle.solid,
-              color: Theme.of(context).extension<MainColorTheme>()?.blue ?? Colors.blue,
-            ),
-          ),
-          filled: false,
-          hintMaxLines: 1,
-          hintText: placeholder,
-          hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray2,
-              ),
         ),
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray4,
+        errorBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(
+            width: 1,
+            style: BorderStyle.solid,
+            color: Theme.of(context).extension<MainColorTheme>()?.red ?? Colors.red,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(
+            width: 1,
+            style: BorderStyle.solid,
+            color: Theme.of(context).extension<MainColorTheme>()?.red ?? Colors.red,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(
+            width: 1,
+            style: BorderStyle.solid,
+            color: Theme.of(context).extension<MainColorTheme>()?.blue ?? Colors.blue,
+          ),
+        ),
+        filled: false,
+        hintMaxLines: 1,
+        hintText: placeholder,
+        hintStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray2,
             ),
-        onChanged: onChanged,
-        value: selectedItem,
-        items: items,
       ),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).extension<GrayscaleColorTheme>()?.gray4,
+          ),
+      onChanged: onChanged,
+      value: selectedItem,
+      items: items,
     );
   }
 }

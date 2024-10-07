@@ -14,7 +14,12 @@ import 'package:hours_control/features/presentation/components/text_input_field.
 final platformStore = GetIt.I.get<PlatformStore>();
 
 class CreateEmployeeDialog extends StatefulWidget {
-  const CreateEmployeeDialog({super.key});
+  const CreateEmployeeDialog({
+    super.key,
+    this.squadId,
+  });
+
+  final int? squadId;
 
   @override
   State<CreateEmployeeDialog> createState() => _CreateEmployeeDialogState();
@@ -126,9 +131,6 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                       }
                       return null;
                     },
-                    onFieldSubmitted: (value) {
-                      print("FIELD SUBMITTED: $value");
-                    },
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -149,9 +151,6 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                       }
 
                       return null;
-                    },
-                    onFieldSubmitted: (value) {
-                      print("FIELD SUBMITTED: $value");
                     },
                   ),
                 ),
@@ -176,6 +175,7 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                     },
                     placeholder: "Selecione uma Squad",
                     items: _getSquadItems(),
+                    selectedItem: _employeeSquadId.value,
                     onChanged: (int? value) {
                       _employeeSquadId.value = value;
                     },

@@ -41,6 +41,11 @@ class _SquadsScreenState extends State<SquadsScreen> {
 
     for (int i = 0; i < platformStore.squadList.length; i++) {
       final squad = platformStore.squadList[i];
+
+      onPressed() {
+        platformStore.setSelectedSquad(squad);
+      }
+
       dataRowList.add(
         DataRow(
           cells: <DataCell>[
@@ -55,16 +60,18 @@ class _SquadsScreenState extends State<SquadsScreen> {
                 alignment: Alignment.centerRight,
                 child: platformStore.isMobile
                     ? CustomIconButton(
-                        onPressed: () {
-                          print("CLICK");
-                        },
+                        onPressed: onPressed,
                         tooltip: "Visitar squad",
                         icon: const Icon(
                           Icons.group,
                           color: Colors.white,
                         ),
                       )
-                    : const ActionButton(text: "Visitar squad"),
+                    : ActionButton(
+                        text: "Visitar squad",
+                        onPressed: onPressed,
+                        height: 33,
+                      ),
               ),
             ),
           ],
@@ -157,6 +164,7 @@ class _SquadsScreenState extends State<SquadsScreen> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                           dataTextStyle: Theme.of(context).textTheme.bodyMedium,
+                                          dataRowMinHeight: 43,
                                           columns: const <DataColumn>[
                                             DataColumn(
                                               headingRowAlignment: MainAxisAlignment.start,

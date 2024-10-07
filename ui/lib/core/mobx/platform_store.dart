@@ -54,4 +54,22 @@ abstract class _PlatformStore with Store {
 
   @action
   void setIsCreatingReport(bool creating) => isCreatingReport = creating;
+
+  @observable
+  SquadEntity? selectedSquad;
+
+  @action
+  void setSelectedSquad(SquadEntity? squad) => selectedSquad = squad;
+
+  @observable
+  List<EmployeeEntity> squadEmployees = [];
+
+  @action
+  void setSquadEmployees(List<EmployeeEntity> employees) => squadEmployees = employees;
+
+  @observable
+  bool isFetchingSquadMemberHours = false;
+
+  @action
+  void setIsFetchingSquadMemberHours(bool fetching) => isFetchingSquadMemberHours = fetching;
 }

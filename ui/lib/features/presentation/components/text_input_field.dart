@@ -43,7 +43,12 @@ class TextInputField extends StatelessWidget {
               ]
             : null,
         decoration: InputDecoration(
-          constraints: const BoxConstraints(minHeight: 56, maxHeight: 2 * 56),
+          constraints: BoxConstraints(
+            minHeight: 56,
+            maxHeight: 2 * 56,
+            minWidth: 350,
+            maxWidth: MediaQuery.of(context).size.width,
+          ),
           border: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(

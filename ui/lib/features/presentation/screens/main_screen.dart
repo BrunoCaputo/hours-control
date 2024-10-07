@@ -6,6 +6,7 @@ import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/screens/dialogs/new_report_dialog.dart';
 import 'package:hours_control/features/presentation/screens/employees_screen.dart';
+import 'package:hours_control/features/presentation/screens/squad_details_screen.dart';
 import 'package:hours_control/features/presentation/screens/squads_screen.dart';
 import 'package:hours_control/features/presentation/themes/grayscale_color_theme.dart';
 
@@ -112,9 +113,11 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             child: TabBarView(
               controller: _tabController,
               physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                SquadsScreen(),
-                EmployeesScreen(),
+              children: [
+                platformStore.selectedSquad != null
+                    ? const SquadDetailsScreen()
+                    : const SquadsScreen(),
+                const EmployeesScreen(),
               ],
             ),
           ),

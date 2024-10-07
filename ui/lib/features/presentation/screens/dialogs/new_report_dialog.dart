@@ -154,6 +154,7 @@ class _NewReportDialogState extends State<NewReportDialog> {
                     },
                     placeholder: "Selecione um usuário",
                     items: _getEmployeetems(),
+                    selectedItem: _reportEmployeeId.value,
                     onChanged: (int? value) {
                       _reportEmployeeId.value = value;
                     },
