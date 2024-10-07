@@ -43,9 +43,32 @@ class EmployeeDataSourceImpl implements EmployeeDataSource {
   }
 
   @override
-  Future<EmployeeEntity> createEmployee(
-      {required String name, required int estimatedHours, required int squadId}) {
-    // TODO: implement createEmployee
-    throw UnimplementedError();
+  Future<EmployeeEntity> createEmployee({
+    required String name,
+    required int estimatedHours,
+    required int squadId,
+  }) async {
+    Uri url = Uri.parse("$serverApiBaseUrl/employee");
+
+    try {
+      var response = await http.post(
+        url,
+        headers: header,
+        body: jsonEncode({
+          "name": name,
+          "estimated_hours": estimatedHours,
+          "squad_id": squadId,
+        }),
+      );
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        EmployeeEntity result = EmployeeEntity.fromJson(data);
+        return result;
+      } else {
+        throw Exception('Failed to create employee');
+      }
+    } catch (error) {
+      rethrow;
+    }
   }
 }

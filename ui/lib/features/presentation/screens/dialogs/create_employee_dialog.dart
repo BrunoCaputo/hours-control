@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
+import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/usecases/create_employee.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/components/custom_form_field.dart';
 import 'package:hours_control/features/presentation/components/feedback_snack_bar.dart';
@@ -23,9 +26,9 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
   final TextEditingController _employeeEstimatedHoursController = TextEditingController();
   final ValueNotifier<int?> _employeeSquadId = ValueNotifier<int?>(null);
 
-  List<DropdownMenuItem<dynamic>> _getSquadItems() {
-    List<DropdownMenuItem<dynamic>> squads = platformStore.squadList.map((squad) {
-      return DropdownMenuItem<dynamic>(
+  List<DropdownMenuItem<int>> _getSquadItems() {
+    List<DropdownMenuItem<int>> squads = platformStore.squadList.map((squad) {
+      return DropdownMenuItem<int>(
         value: squad.id,
         child: Text("${squad.id} - ${squad.name}"),
       );
@@ -35,7 +38,39 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
       _employeeSquadId.value = squads.first.value;
     }
 
-    return [];
+    return squads;
+  }
+
+  Future<void> _handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      Map<String, String> newEmployee = {
+        "name": _employeeNameController.text,
+        "estimatedHours": _employeeEstimatedHoursController.text,
+        "squadId": _employeeSquadId.value.toString(),
+      };
+      final CreateEmployeeUseCase createEmployeeUseCase = GetIt.I.get<CreateEmployeeUseCase>();
+
+      platformStore.setIsCreatingEmployee(true);
+      try {
+        EmployeeEntity createdEmployee = await createEmployeeUseCase.call(
+          params: newEmployee,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          FeedbackSnackBar.build(
+            context,
+            message: "Usuário criado!",
+            type: SnackbarType.success,
+          ),
+        );
+        List<EmployeeEntity> newList = [...platformStore.employeeList, createdEmployee];
+        platformStore.setEmployeeList(newList);
+        Navigator.of(context).pop();
+      } catch (error) {
+        print("ERROR: $error");
+      } finally {
+        platformStore.setIsCreatingEmployee(false);
+      }
+    }
   }
 
   @override
@@ -69,27 +104,7 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
               text: "Criar usuário",
               isDisabled: platformStore.isCreatingEmployee,
               isLoading: platformStore.isCreatingEmployee,
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  platformStore.setIsCreatingEmployee(true);
-                  try {
-                    await Future.delayed(const Duration(seconds: 2), () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        FeedbackSnackBar.build(
-                          context,
-                          message: "Usuário criado!",
-                          type: SnackbarType.success,
-                        ),
-                      );
-                      Navigator.of(context).pop();
-                    });
-                  } catch (error) {
-                    print("ERROR: $error");
-                  } finally {
-                    platformStore.setIsCreatingEmployee(false);
-                  }
-                }
-              },
+              onPressed: _handleSubmit,
             ),
           ],
           contentPadding: const EdgeInsets.symmetric(horizontal: 32),
@@ -124,12 +139,12 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                     keyboardType: TextInputType.number,
                     placeholder: "Digite a quantidade de horas",
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.toString().isEmpty) {
                         return "O usuário deve ter uma estimativa de horas!";
                       }
 
                       int numericValue = int.parse(value);
-                      if (numericValue < 1 && numericValue > 12) {
+                      if (numericValue < 1 || numericValue > 12) {
                         return "As horas estimadas devem estar entre 1 e 12!";
                       }
 
@@ -145,16 +160,25 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
                   fieldText: "Squad",
                   child: SelectInputField(
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.toString().isEmpty) {
                         return "O usuário deve estar em uma squad!";
+                      }
+
+                      bool squadExists = platformStore.squadList.firstWhereOrNull(
+                            (squad) => squad.id == value,
+                          ) !=
+                          null;
+                      if (!squadExists) {
+                        return "O squad inexistente!";
                       }
 
                       return null;
                     },
                     placeholder: "Selecione uma Squad",
                     items: _getSquadItems(),
-                    onChanged: (dynamic value) {
-                      _employeeSquadId.value = value.id;
+                    onChanged: (int? value) {
+                      print(value);
+                      _employeeSquadId.value = value;
                     },
                   ),
                 ),

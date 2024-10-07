@@ -20,8 +20,16 @@ class EmployeeRepositoryImpl implements EmployeeRepository {
     required String name,
     required int estimatedHours,
     required int squadId,
-  }) {
-    // TODO: implement createEmployee
-    throw UnimplementedError();
+  }) async {
+    try {
+      EmployeeEntity newEmployee = await _employeeDataSource.createEmployee(
+        name: name,
+        estimatedHours: estimatedHours,
+        squadId: squadId,
+      );
+      return newEmployee;
+    } catch (error) {
+      rethrow;
+    }
   }
 }
