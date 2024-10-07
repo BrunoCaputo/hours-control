@@ -1,3 +1,6 @@
 import 'dart:io';
 
-String serverApiBaseUrl = Platform.isAndroid ? "http://10.0.2.2:3000" : "http://localhost:3000";
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+String serverApiBaseUrl =
+    kIsWeb || !Platform.isAndroid ? "http://localhost:3000" : "http://10.0.2.2:3000";

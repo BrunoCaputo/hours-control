@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
+import 'package:hours_control/features/domain/entities/squad_entity.dart';
+import 'package:hours_control/features/domain/usecases/create_squad.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/components/custom_form_field.dart';
 import 'package:hours_control/features/presentation/components/feedback_snack_bar.dart';
@@ -19,6 +21,34 @@ class CreateSquadDialog extends StatefulWidget {
 class _CreateSquadDialogState extends State<CreateSquadDialog> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _squadNameController = TextEditingController();
+
+  Future<void> _handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      Map<String, String> newSquad = {
+        "name": _squadNameController.text,
+      };
+      final CreateSquadUseCase createSquadUseCase = GetIt.I.get<CreateSquadUseCase>();
+
+      platformStore.setIsCreatingSquad(true);
+      try {
+        SquadEntity createdSquad = await createSquadUseCase.call(params: newSquad);
+        ScaffoldMessenger.of(context).showSnackBar(
+          FeedbackSnackBar.build(
+            context,
+            message: "Squad criada!",
+            type: SnackbarType.success,
+          ),
+        );
+        List<SquadEntity> newList = [...platformStore.squadList, createdSquad];
+        platformStore.setSquadList(newList);
+        Navigator.of(context).pop();
+      } catch (error) {
+        print("ERROR: $error");
+      } finally {
+        platformStore.setIsCreatingSquad(false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,27 +79,7 @@ class _CreateSquadDialogState extends State<CreateSquadDialog> {
             text: "Criar squad",
             isDisabled: platformStore.isCreatingSquad,
             isLoading: platformStore.isCreatingSquad,
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                platformStore.setIsCreatingSquad(true);
-                try {
-                  await Future.delayed(const Duration(seconds: 2), () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      FeedbackSnackBar.build(
-                        context,
-                        message: "Squad criada!",
-                        type: SnackbarType.success,
-                      ),
-                    );
-                    Navigator.of(context).pop();
-                  });
-                } catch (error) {
-                  print("ERROR: $error");
-                } finally {
-                  platformStore.setIsCreatingSquad(false);
-                }
-              }
-            },
+            onPressed: _handleSubmit,
           ),
         ],
         contentPadding: const EdgeInsets.symmetric(horizontal: 32),

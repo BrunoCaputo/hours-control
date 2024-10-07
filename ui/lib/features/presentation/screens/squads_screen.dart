@@ -42,7 +42,6 @@ class _SquadsScreenState extends State<SquadsScreen> {
 
     for (int i = 0; i < platformStore.squadList.length; i++) {
       final squad = platformStore.squadList[i];
-      print("SQUAD: ${squad.toString()}");
       dataRowList.add(
         DataRow(
           cells: <DataCell>[
@@ -66,9 +65,7 @@ class _SquadsScreenState extends State<SquadsScreen> {
                           color: Colors.white,
                         ),
                       )
-                    : const ActionButton(
-                        text: "Visitar squad",
-                      ),
+                    : const ActionButton(text: "Visitar squad"),
               ),
             ),
           ],

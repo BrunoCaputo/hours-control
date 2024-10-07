@@ -14,4 +14,15 @@ class SquadRepositoryImpl implements SquadRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<SquadEntity> createSquad({required String name}) async {
+    try {
+      SquadEntity newSquad = await _squadDataSource.createSquad(name: name);
+      print("SQUAD: ${newSquad.toString()}");
+      return newSquad;
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

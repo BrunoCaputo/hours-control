@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
+import 'package:hours_control/features/domain/usecases/create_squad.dart';
 import 'package:hours_control/features/domain/usecases/fetch_squads.dart';
 import 'package:hours_control/features/presentation/screens/main_screen.dart';
 import 'package:hours_control/features/presentation/themes/grayscale_color_theme.dart';
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
       }
       if (!GetIt.I.isRegistered<FetchSquadsUseCase>()) {
         GetIt.I.registerSingleton<FetchSquadsUseCase>(FetchSquadsUseCase());
+      }
+      if (!GetIt.I.isRegistered<CreateSquadUseCase>()) {
+        GetIt.I.registerSingleton<CreateSquadUseCase>(CreateSquadUseCase());
       }
     } catch (err) {
       throw Exception("Failed to register: $err");

@@ -3,11 +3,15 @@ import 'package:hours_control/features/data/repositories/squad_repository_impl.d
 import 'package:hours_control/features/domain/entities/squad_entity.dart';
 import 'package:hours_control/features/domain/repositories/squad_repository.dart';
 
-class FetchSquadsUseCase implements UseCase<List<SquadEntity>, void> {
+class CreateSquadUseCase implements UseCase<SquadEntity, Map<String, String>?> {
   final SquadRepository _squadRepository = SquadRepositoryImpl();
 
   @override
-  Future<List<SquadEntity>> call({params}) async {
-    return _squadRepository.fetchSquads();
+  Future<SquadEntity> call({params}) async {
+    if(params == null) {
+      throw Error();
+    }
+
+    return _squadRepository.createSquad(name: params["name"]!);
   }
 }

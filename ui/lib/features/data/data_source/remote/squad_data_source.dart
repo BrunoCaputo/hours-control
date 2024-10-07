@@ -6,6 +6,8 @@ import 'package:hours_control/features/domain/entities/squad_entity.dart';
 
 abstract class SquadDataSource {
   Future<List<SquadEntity>> fetchSquads();
+
+  Future<SquadEntity> createSquad({required String name});
 }
 
 class SquadDataSourceImpl implements SquadDataSource {
@@ -30,6 +32,29 @@ class SquadDataSourceImpl implements SquadDataSource {
         return result;
       } else {
         throw Exception('Failed to fetch squads');
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<SquadEntity> createSquad({required String name}) async {
+    Uri url = Uri.parse("$serverApiBaseUrl/squad");
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {'Content-type': 'application/json'},
+        body: jsonEncode({"name": name}),
+      );
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        print("DATA: ${data.toString()}");
+        SquadEntity result = SquadEntity.fromJson(data);
+        return result;
+      } else {
+        throw Exception('Failed to create squad');
       }
     } catch (error) {
       rethrow;
