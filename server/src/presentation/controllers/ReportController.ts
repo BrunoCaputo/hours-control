@@ -19,7 +19,7 @@ export class ReportController {
     this.createSquad = new CreateReportUseCase(reportRepository);
   }
 
-  async create(request: FastifyRequest): Promise<void> {
+  async create(request: FastifyRequest): Promise<Report> {
     try {
       const {
         description,
@@ -27,7 +27,7 @@ export class ReportController {
         spent_hours: spentHours,
       } = request.body as ICreateReportBody;
 
-      await this.createSquad.call(
+      return await this.createSquad.call(
         new Report({ description, employeeId, spentHours })
       );
     } catch (error) {

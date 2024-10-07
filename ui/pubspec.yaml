@@ -19,6 +19,7 @@ dependencies:
   mobx_codegen: ^2.6.1
   flutter_mobx: ^2.2.1+1
   http: ^1.2.2
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:

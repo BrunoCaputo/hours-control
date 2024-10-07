@@ -22,7 +22,7 @@ export class EmployeeController {
     this.getEmployees = new GetEmployeesUseCase(employeeRepository);
   }
 
-  async create(request: FastifyRequest): Promise<void> {
+  async create(request: FastifyRequest): Promise<Employee> {
     try {
       const {
         name,
@@ -30,7 +30,7 @@ export class EmployeeController {
         squad_id: squadId,
       } = request.body as ICreateEmployeeBody;
 
-      await this.createEmployee.call(
+      return await this.createEmployee.call(
         new Employee({ name, estimatedHours, squadId })
       );
     } catch (error) {

@@ -1,3 +1,5 @@
+import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/entities/squad_entity.dart';
 import 'package:mobx/mobx.dart';
 
 part 'platform_store.g.dart';
@@ -18,10 +20,10 @@ abstract class _PlatformStore with Store {
   void setIsFetchingSquads(bool fetching) => isFetchingSquads = fetching;
 
   @observable
-  List<dynamic> squadList = [];
+  List<SquadEntity> squadList = [];
 
   @action
-  void setSquadList(List<dynamic> squads) => squadList = squads;
+  void setSquadList(List<SquadEntity> squads) => squadList = squads;
 
   @observable
   bool isCreatingSquad = false;
@@ -36,14 +38,20 @@ abstract class _PlatformStore with Store {
   void setIsFetchingEmployees(bool fetching) => isFetchingEmployees = fetching;
 
   @observable
-  List<dynamic> employeeList = [];
+  List<EmployeeEntity> employeeList = [];
 
   @action
-  void setEmployeeList(List<dynamic> employees) => employeeList = employees;
+  void setEmployeeList(List<EmployeeEntity> employees) => employeeList = employees;
 
   @observable
   bool isCreatingEmployee = false;
 
   @action
   void setIsCreatingEmployee(bool creating) => isCreatingEmployee = creating;
+
+  @observable
+  bool isCreatingReport = false;
+
+  @action
+  void setIsCreatingReport(bool creating) => isCreatingReport = creating;
 }
