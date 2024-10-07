@@ -1,3 +1,4 @@
+import 'package:hours_control/features/domain/entities/employee_entity.dart';
 import 'package:hours_control/features/domain/entities/squad_entity.dart';
 import 'package:mobx/mobx.dart';
 
@@ -37,10 +38,10 @@ abstract class _PlatformStore with Store {
   void setIsFetchingEmployees(bool fetching) => isFetchingEmployees = fetching;
 
   @observable
-  List<dynamic> employeeList = [];
+  List<EmployeeEntity> employeeList = [];
 
   @action
-  void setEmployeeList(List<dynamic> employees) => employeeList = employees;
+  void setEmployeeList(List<EmployeeEntity> employees) => employeeList = employees;
 
   @observable
   bool isCreatingEmployee = false;

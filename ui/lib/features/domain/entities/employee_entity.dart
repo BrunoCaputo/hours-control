@@ -11,11 +11,11 @@ class EmployeeEntity {
     required this.squadId,
   });
 
-  EmployeeEntity fromJson(Map<String, dynamic> json) => EmployeeEntity(
+  factory EmployeeEntity.fromJson(Map<String, dynamic> json) => EmployeeEntity(
         id: json['id'],
         name: json['name'],
-        estimatedHours: json['estimated_hours'],
-        squadId: json['squad_id'],
+        estimatedHours: json['estimatedHours'],
+        squadId: json['squadId'],
       );
 
   Map<String, dynamic> toJson(EmployeeEntity entity) => {

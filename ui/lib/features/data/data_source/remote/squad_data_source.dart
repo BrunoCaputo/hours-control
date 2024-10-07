@@ -45,12 +45,11 @@ class SquadDataSourceImpl implements SquadDataSource {
     try {
       var response = await http.post(
         url,
-        headers: {'Content-type': 'application/json'},
+        headers: header,
         body: jsonEncode({"name": name}),
       );
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
-        print("DATA: ${data.toString()}");
         SquadEntity result = SquadEntity.fromJson(data);
         return result;
       } else {

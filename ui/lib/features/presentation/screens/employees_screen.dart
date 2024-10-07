@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
+import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/usecases/fetch_employees.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/components/empty_data.dart';
 import 'package:hours_control/features/presentation/screens/dialogs/create_employee_dialog.dart';
+import 'package:hours_control/features/presentation/screens/dialogs/create_squad_dialog.dart';
 import 'package:hours_control/features/presentation/themes/main_color_theme.dart';
 
 final platformStore = GetIt.I.get<PlatformStore>();
@@ -20,10 +23,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   late ScrollController _scrollController;
 
   Future<void> _fetchEmployees() async {
+    final FetchEmployeesUseCase fetchEmployeesUseCase = GetIt.I.get<FetchEmployeesUseCase>();
+
     try {
       platformStore.setIsFetchingEmployees(true);
-      await Future.delayed(const Duration(seconds: 2));
-      // TODO: FETCH SQUADS
+      List<EmployeeEntity> employees = await fetchEmployeesUseCase.call();
+      platformStore.setEmployeeList(employees);
     } catch (e) {
       print('Error fetching employees: $e');
     } finally {
@@ -43,17 +48,17 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               Text(employee.name),
             ),
             DataCell(
-              Text(employee.estimatedHours),
+              Text(employee.estimatedHours.toString()),
             ),
             DataCell(
-              Text(employee.squadId),
+              Text(employee.squadId.toString()),
             ),
           ],
         ),
       );
     }
 
-    return [];
+    return dataRowList;
   }
 
   String _getEmptyText() {
@@ -76,10 +81,9 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   }
 
   Widget _getDialogContent() {
-    // TODO: Implement dialog content based on platformStore.squadList.isEmpty
-    // if (platformStore.squadList.isEmpty) {
-    //   return const CreateSquadDialog();
-    // }
+    if (platformStore.squadList.isEmpty) {
+      return const CreateSquadDialog();
+    }
 
     return const CreateEmployeeDialog();
   }

@@ -28,7 +28,6 @@ class _SquadsScreenState extends State<SquadsScreen> {
     try {
       platformStore.setIsFetchingSquads(true);
       List<SquadEntity> squads = await fetchSquadsUseCase.call();
-      print("SQUADS: ${squads.toString()}");
       platformStore.setSquadList(squads);
     } catch (e) {
       print('Error fetching squads: $e');
