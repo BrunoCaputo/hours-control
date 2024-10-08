@@ -13,6 +13,16 @@ abstract class SquadDataSource {
     required int squadId,
     required int period,
   });
+
+  Future<int> getSquadTotalSpentHours({
+    required int squadId,
+    required int period,
+  });
+
+  Future<double> getSquadAverageHours({
+    required int squadId,
+    required int period,
+  });
 }
 
 class SquadDataSourceImpl implements SquadDataSource {
@@ -77,7 +87,7 @@ class SquadDataSourceImpl implements SquadDataSource {
     try {
       var response = await http.get(url, headers: header);
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body) as Map<String, dynamic>;
+        var data = json.decode(response.body) as Map<String, dynamic>;
 
         Map<String, Map<String, int>> typedMap = data.map((key, value) {
           return MapEntry(
@@ -89,6 +99,52 @@ class SquadDataSourceImpl implements SquadDataSource {
         return typedMap;
       } else {
         throw Exception('Failed to get squad members hours');
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<int> getSquadTotalSpentHours({
+    required int squadId,
+    required int period,
+  }) async {
+    Uri url = Uri.parse(
+      "$serverApiBaseUrl/squad/hours/total?squad_id=$squadId&period=$period",
+    );
+
+    try {
+      var response = await http.get(url, headers: header);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        int result = data["squadSpentHours"];
+        return result;
+      } else {
+        throw Exception('Failed to get squad total hours');
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<double> getSquadAverageHours({
+    required int squadId,
+    required int period,
+  }) async {
+    Uri url = Uri.parse(
+      "$serverApiBaseUrl/squad/hours/average?squad_id=$squadId&period=$period",
+    );
+
+    try {
+      var response = await http.get(url, headers: header);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        double result = data["squadAverageHours"];
+        return result;
+      } else {
+        throw Exception('Failed to get squad total hours');
       }
     } catch (error) {
       rethrow;

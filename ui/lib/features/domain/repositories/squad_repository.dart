@@ -10,4 +10,14 @@ abstract class SquadRepository {
     required int squadId,
     required int period,
   });
+
+  Future<int> getSquadTotalSpentHours({
+    required int squadId,
+    required int period,
+  });
+
+  Future<double> getSquadAverageHours({
+    required int squadId,
+    required int period,
+  });
 }

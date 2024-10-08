@@ -5,14 +5,13 @@ import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/features/domain/entities/employee_entity.dart';
 import 'package:hours_control/features/domain/entities/report_entity.dart';
 import 'package:hours_control/features/domain/entities/squad_entity.dart';
-import 'package:hours_control/features/domain/models/squad_member_hours.dart';
 import 'package:hours_control/features/domain/usecases/get_reports_by_squad_id.dart';
-import 'package:hours_control/features/domain/usecases/get_squad_member_hours.dart';
+import 'package:hours_control/features/domain/usecases/get_squad_average_hours.dart';
+import 'package:hours_control/features/domain/usecases/get_squad_total_hours.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
 import 'package:hours_control/features/presentation/components/empty_data.dart';
 import 'package:hours_control/features/presentation/components/icon_button.dart';
 import 'package:hours_control/features/presentation/components/select_input_field.dart';
-import 'package:hours_control/features/presentation/components/text_input_field.dart';
 import 'package:hours_control/features/presentation/screens/dialogs/create_employee_dialog.dart';
 import 'package:hours_control/features/presentation/themes/main_color_theme.dart';
 import 'package:hours_control/shared/utils/get_employee_by_id_from_list.dart';
@@ -39,7 +38,11 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
     super.initState();
     _scrollController = ScrollController(initialScrollOffset: 0);
     squad = platformStore.selectedSquad!;
-    _fetchSquadMembersReports();
+    Future.wait([
+      _fetchSquadMembersReports(),
+      _getSquadTotalHours(),
+      _getSquadAverageHours(),
+    ]);
   }
 
   String _getEmptyText() {
@@ -59,6 +62,41 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
     }).toList();
 
     return periods;
+  }
+
+  Future<void> _getSquadTotalHours() async {
+    final GetSquadTotalHoursUseCase getTotalSpentHours = GetIt.I.get<GetSquadTotalHoursUseCase>();
+
+    try {
+      int totalHours = await getTotalSpentHours.call(
+        params: {
+          "squadId": squad.id,
+          "period": _period.value,
+        },
+      );
+
+      platformStore.setSquadTotalHours(totalHours);
+    } catch (error) {
+      print("Error on load squad total hours: $error");
+    }
+  }
+
+  Future<void> _getSquadAverageHours() async {
+    final GetSquadAverageHoursUseCase getAverageSpentHours =
+        GetIt.I.get<GetSquadAverageHoursUseCase>();
+
+    try {
+      double averageHours = await getAverageSpentHours.call(
+        params: {
+          "squadId": squad.id,
+          "period": _period.value,
+        },
+      );
+
+      platformStore.setSquadAverageHours(averageHours);
+    } catch (error) {
+      print("Error on load squad average hours: $error");
+    }
   }
 
   Future<void> _fetchSquadMembersReports() async {
@@ -334,7 +372,7 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              "27 Horas",
+                              "${platformStore.squadTotalHours} Horas",
                               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                     color: Theme.of(context).extension<MainColorTheme>()?.blue,
                                   ),
@@ -348,7 +386,7 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              "3 Horas/Dia",
+                              "${platformStore.squadAverageHours.toStringAsFixed(1)} Horas/Dia",
                               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                     color: Theme.of(context).extension<MainColorTheme>()?.blue,
                                   ),

@@ -86,4 +86,16 @@ abstract class _PlatformStore with Store {
 
   @action
   void setSquadMemberHoursList(List<SquadMemberHours> hours) => squadMemberHoursList = hours;
+
+  @observable
+  int squadTotalHours = 0;
+
+  @action
+  void setSquadTotalHours(int totalHours) => squadTotalHours = totalHours;
+
+  @observable
+  double squadAverageHours = 0.0;
+
+  @action
+  void setSquadAverageHours(double averageHours) => squadAverageHours = averageHours;
 }

@@ -49,4 +49,36 @@ class SquadRepositoryImpl implements SquadRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<int> getSquadTotalSpentHours({
+    required int squadId,
+    required int period,
+  }) async {
+    try {
+      int totalSpentHours = await _squadDataSource.getSquadTotalSpentHours(
+        squadId: squadId,
+        period: period,
+      );
+      return totalSpentHours;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<double> getSquadAverageHours({
+    required int squadId,
+    required int period,
+  }) async {
+    try {
+      double averageSpentHours = await _squadDataSource.getSquadAverageHours(
+        squadId: squadId,
+        period: period,
+      );
+      return averageSpentHours;
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

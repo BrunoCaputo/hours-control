@@ -11,7 +11,9 @@ import 'package:hours_control/features/domain/usecases/create_squad.dart';
 import 'package:hours_control/features/domain/usecases/fetch_employees.dart';
 import 'package:hours_control/features/domain/usecases/fetch_squads.dart';
 import 'package:hours_control/features/domain/usecases/get_reports_by_squad_id.dart';
+import 'package:hours_control/features/domain/usecases/get_squad_average_hours.dart';
 import 'package:hours_control/features/domain/usecases/get_squad_member_hours.dart';
+import 'package:hours_control/features/domain/usecases/get_squad_total_hours.dart';
 import 'package:hours_control/features/presentation/screens/main_screen.dart';
 import 'package:hours_control/features/presentation/themes/grayscale_color_theme.dart';
 import 'package:hours_control/features/presentation/themes/main_color_theme.dart';
@@ -52,6 +54,12 @@ class MyApp extends StatelessWidget {
       }
       if (!GetIt.I.isRegistered<GetSquadMemberHoursUseCase>()) {
         GetIt.I.registerSingleton<GetSquadMemberHoursUseCase>(GetSquadMemberHoursUseCase());
+      }
+      if (!GetIt.I.isRegistered<GetSquadTotalHoursUseCase>()) {
+        GetIt.I.registerSingleton<GetSquadTotalHoursUseCase>(GetSquadTotalHoursUseCase());
+      }
+      if (!GetIt.I.isRegistered<GetSquadAverageHoursUseCase>()) {
+        GetIt.I.registerSingleton<GetSquadAverageHoursUseCase>(GetSquadAverageHoursUseCase());
       }
     } catch (err) {
       throw Exception("Failed to register: $err");
