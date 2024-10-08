@@ -51,8 +51,4 @@ List<Map<String, dynamic>> periodsOptions = [
     'label': 'Último ano',
     'value': 365,
   },
-  {
-    'label': 'Customizado',
-    'value': 0,
-  }
 ];

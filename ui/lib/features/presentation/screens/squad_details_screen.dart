@@ -139,7 +139,7 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
         return Padding(
           padding: platformStore.isMobile
               ? const EdgeInsets.all(8)
-              : const EdgeInsets.fromLTRB(160, 100, 160, 190),
+              : const EdgeInsets.fromLTRB(160, 30, 160, 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 36),
+              SizedBox(height: platformStore.isMobile ? 20 : 36),
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -176,7 +176,7 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                   ),
                   padding: platformStore.isMobile
                       ? const EdgeInsets.symmetric(horizontal: 8, vertical: 10)
-                      : const EdgeInsets.symmetric(horizontal: 32, vertical: 64),
+                      : const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
                   width: MediaQuery.of(context).size.width,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -194,40 +194,37 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SelectInputField(
-                            placeholder: "Selecione o período",
-                            items: _getPeriods(),
-                            selectedItem: _period.value,
-                            onChanged: (value) {
-                              setState(() {
-                                _period.value = value ?? 7;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 15),
-                          if (_period.value == 0)
-                            TextInputField(
-                              controller: _customPeriod,
-                              keyboardType: TextInputType.number,
-                              placeholder: "Período customizado",
+                          SizedBox(
+                            height: platformStore.isMobile ? 30 : null,
+                            child: SelectInputField(
+                              placeholder: "Selecione o período",
+                              minHeight: platformStore.isMobile ? 30 : 56,
+                              style: platformStore.isMobile
+                                  ? Theme.of(context).textTheme.titleMedium
+                                  : null,
+                              items: _getPeriods(),
+                              selectedItem: _period.value,
                               onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  setState(() {
-                                    _period.value = int.parse(value);
-                                  });
-                                }
+                                setState(() {
+                                  _period.value = value ?? 7;
+                                });
                               },
                             ),
+                          ),
                           const SizedBox(height: 15),
-                          ActionButton(
-                            text: "Aplicar período",
-                            isLoading: platformStore.isFetchingSquadMemberHours,
-                            isDisabled: platformStore.isFetchingSquadMemberHours,
-                            onPressed: () {},
+                          SizedBox(
+                            height: platformStore.isMobile ? 30 : null,
+                            child: ActionButton(
+                              text: "Aplicar período",
+                              height: platformStore.isMobile ? 30 : null,
+                              isLoading: platformStore.isFetchingSquadMemberHours,
+                              isDisabled: platformStore.isFetchingSquadMemberHours,
+                              onPressed: _fetchSquadMembersReports,
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 36),
+                      SizedBox(height: platformStore.isMobile ? 20 : 32),
                       Expanded(
                         child: platformStore.isFetchingSquadMemberHours
                             ? Center(
@@ -254,59 +251,56 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                                                 ScrollViewKeyboardDismissBehavior.onDrag,
                                             physics: const AlwaysScrollableScrollPhysics(),
                                             padding: EdgeInsets.zero,
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context).size.width,
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis.horizontal,
-                                                keyboardDismissBehavior:
-                                                    ScrollViewKeyboardDismissBehavior.onDrag,
-                                                physics: const AlwaysScrollableScrollPhysics(),
-                                                padding: EdgeInsets.zero,
-                                                child: DataTable(
-                                                  headingRowColor:
-                                                      WidgetStateProperty.resolveWith<Color>(
-                                                    (Set<WidgetState> states) {
-                                                      return Theme.of(context)
-                                                              .extension<MainColorTheme>()
-                                                              ?.blue ??
-                                                          Colors.blue;
-                                                    },
-                                                  ),
-                                                  headingTextStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  dataTextStyle:
-                                                      Theme.of(context).textTheme.bodyMedium,
-                                                  columns: const <DataColumn>[
-                                                    DataColumn(
-                                                      headingRowAlignment: MainAxisAlignment.start,
-                                                      label: Expanded(
-                                                        child: Text('Membro'),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      headingRowAlignment: MainAxisAlignment.start,
-                                                      label: Expanded(
-                                                        child: Text('Descrição'),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      headingRowAlignment: MainAxisAlignment.start,
-                                                      label: Expanded(
-                                                        child: Text('Horas'),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      headingRowAlignment: MainAxisAlignment.start,
-                                                      label: Expanded(
-                                                        child: Text('Criado em'),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                  rows: _buildTableData(),
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              keyboardDismissBehavior:
+                                                  ScrollViewKeyboardDismissBehavior.onDrag,
+                                              physics: const AlwaysScrollableScrollPhysics(),
+                                              padding: EdgeInsets.zero,
+                                              child: DataTable(
+                                                headingRowColor:
+                                                    WidgetStateProperty.resolveWith<Color>(
+                                                  (Set<WidgetState> states) {
+                                                    return Theme.of(context)
+                                                            .extension<MainColorTheme>()
+                                                            ?.blue ??
+                                                        Colors.blue;
+                                                  },
                                                 ),
+                                                headingTextStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                dataTextStyle:
+                                                    Theme.of(context).textTheme.bodyMedium,
+                                                columns: const <DataColumn>[
+                                                  DataColumn(
+                                                    headingRowAlignment: MainAxisAlignment.start,
+                                                    label: Expanded(
+                                                      child: Text('Membro'),
+                                                    ),
+                                                  ),
+                                                  DataColumn(
+                                                    headingRowAlignment: MainAxisAlignment.start,
+                                                    label: Expanded(
+                                                      child: Text('Descrição'),
+                                                    ),
+                                                  ),
+                                                  DataColumn(
+                                                    headingRowAlignment: MainAxisAlignment.start,
+                                                    label: Expanded(
+                                                      child: Text('Horas'),
+                                                    ),
+                                                  ),
+                                                  DataColumn(
+                                                    headingRowAlignment: MainAxisAlignment.start,
+                                                    label: Expanded(
+                                                      child: Text('Criado em'),
+                                                    ),
+                                                  ),
+                                                ],
+                                                rows: _buildTableData(),
                                               ),
                                             ),
                                           ),
@@ -328,6 +322,39 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                                 ],
                               ),
                       ),
+                      SizedBox(height: platformStore.isMobile ? 20 : 32),
+                      if (platformStore.squadEmployees.isNotEmpty)
+                        Column(
+                          children: [
+                            Text(
+                              "Horas totais da squad",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.black,
+                                  ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "27 Horas",
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                    color: Theme.of(context).extension<MainColorTheme>()?.blue,
+                                  ),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              "Média de horas por dia",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.black,
+                                  ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "3 Horas/Dia",
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                    color: Theme.of(context).extension<MainColorTheme>()?.blue,
+                                  ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),

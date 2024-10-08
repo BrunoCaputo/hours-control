@@ -111,7 +111,9 @@ class ActionButton extends StatelessWidget {
             (states) => _getBorder(states, context),
           ),
           padding: WidgetStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            height != null && platformStore.isMobile
+                ? const EdgeInsets.symmetric(horizontal: 24, vertical: 5)
+                : const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           ),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
