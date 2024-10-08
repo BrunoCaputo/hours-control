@@ -6,4 +6,9 @@ abstract class ReportRepository {
     required int employeeId,
     required int spentHours,
   });
+
+  Future<List<ReportEntity>> getReportsBySquadId({
+    required int squadId,
+    required int period,
+  });
 }

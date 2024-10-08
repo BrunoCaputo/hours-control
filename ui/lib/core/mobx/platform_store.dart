@@ -1,5 +1,7 @@
 import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/entities/report_entity.dart';
 import 'package:hours_control/features/domain/entities/squad_entity.dart';
+import 'package:hours_control/features/domain/models/squad_member_hours.dart';
 import 'package:mobx/mobx.dart';
 
 part 'platform_store.g.dart';
@@ -54,4 +56,46 @@ abstract class _PlatformStore with Store {
 
   @action
   void setIsCreatingReport(bool creating) => isCreatingReport = creating;
+
+  @observable
+  SquadEntity? selectedSquad;
+
+  @action
+  void setSelectedSquad(SquadEntity? squad) => selectedSquad = squad;
+
+  @observable
+  List<EmployeeEntity> squadEmployees = [];
+
+  @action
+  void setSquadEmployees(List<EmployeeEntity> employees) => squadEmployees = employees;
+
+  @observable
+  bool isFetchingSquadMemberHours = false;
+
+  @action
+  void setIsFetchingSquadMemberHours(bool fetching) => isFetchingSquadMemberHours = fetching;
+
+  @observable
+  List<ReportEntity> squadReportsList = [];
+
+  @action
+  void setSquadReportsList(List<ReportEntity> reports) => squadReportsList = reports;
+
+  @observable
+  List<SquadMemberHours> squadMemberHoursList = [];
+
+  @action
+  void setSquadMemberHoursList(List<SquadMemberHours> hours) => squadMemberHoursList = hours;
+
+  @observable
+  int squadTotalHours = 0;
+
+  @action
+  void setSquadTotalHours(int totalHours) => squadTotalHours = totalHours;
+
+  @observable
+  double squadAverageHours = 0.0;
+
+  @action
+  void setSquadAverageHours(double averageHours) => squadAverageHours = averageHours;
 }

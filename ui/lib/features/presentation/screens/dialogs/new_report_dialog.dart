@@ -129,7 +129,6 @@ class _NewReportDialogState extends State<NewReportDialog> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 32),
           content: Form(
             key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,6 +153,7 @@ class _NewReportDialogState extends State<NewReportDialog> {
                     },
                     placeholder: "Selecione um usuário",
                     items: _getEmployeetems(),
+                    selectedItem: _reportEmployeeId.value,
                     onChanged: (int? value) {
                       _reportEmployeeId.value = value;
                     },

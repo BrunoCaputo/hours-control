@@ -85,7 +85,6 @@ class _CreateSquadDialogState extends State<CreateSquadDialog> {
         contentPadding: const EdgeInsets.symmetric(horizontal: 32),
         content: Form(
           key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: CustomFormField(
             fieldText: "Nome da Squad",
             child: TextInputField(

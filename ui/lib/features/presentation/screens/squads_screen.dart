@@ -22,25 +22,16 @@ class SquadsScreen extends StatefulWidget {
 class _SquadsScreenState extends State<SquadsScreen> {
   late ScrollController _scrollController;
 
-  Future<void> _fetchSquads() async {
-    final FetchSquadsUseCase fetchSquadsUseCase = GetIt.I.get<FetchSquadsUseCase>();
-
-    try {
-      platformStore.setIsFetchingSquads(true);
-      List<SquadEntity> squads = await fetchSquadsUseCase.call();
-      platformStore.setSquadList(squads);
-    } catch (e) {
-      print('Error fetching squads: $e');
-    } finally {
-      platformStore.setIsFetchingSquads(false);
-    }
-  }
-
   List<DataRow> _buildTableData() {
     List<DataRow> dataRowList = [];
 
     for (int i = 0; i < platformStore.squadList.length; i++) {
       final squad = platformStore.squadList[i];
+
+      onPressed() {
+        platformStore.setSelectedSquad(squad);
+      }
+
       dataRowList.add(
         DataRow(
           cells: <DataCell>[
@@ -55,16 +46,18 @@ class _SquadsScreenState extends State<SquadsScreen> {
                 alignment: Alignment.centerRight,
                 child: platformStore.isMobile
                     ? CustomIconButton(
-                        onPressed: () {
-                          print("CLICK");
-                        },
+                        onPressed: onPressed,
                         tooltip: "Visitar squad",
                         icon: const Icon(
                           Icons.group,
                           color: Colors.white,
                         ),
                       )
-                    : const ActionButton(text: "Visitar squad"),
+                    : ActionButton(
+                        text: "Visitar squad",
+                        onPressed: onPressed,
+                        height: 33,
+                      ),
               ),
             ),
           ],
@@ -79,9 +72,6 @@ class _SquadsScreenState extends State<SquadsScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController(initialScrollOffset: 0);
-    if (platformStore.squadList.isEmpty) {
-      _fetchSquads();
-    }
   }
 
   @override
@@ -157,6 +147,7 @@ class _SquadsScreenState extends State<SquadsScreen> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                           dataTextStyle: Theme.of(context).textTheme.bodyMedium,
+                                          dataRowMinHeight: 43,
                                           columns: const <DataColumn>[
                                             DataColumn(
                                               headingRowAlignment: MainAxisAlignment.start,

@@ -18,6 +18,7 @@ class ActionButton extends StatelessWidget {
     super.key,
     required this.text,
     this.variant = ButtonVariant.primary,
+    this.height,
     this.onPressed,
     this.isDisabled = false,
     this.isLoading = false,
@@ -25,6 +26,7 @@ class ActionButton extends StatelessWidget {
 
   final String text;
   final ButtonVariant variant;
+  final double? height;
   final VoidCallback? onPressed;
   final bool isDisabled;
   final bool isLoading;
@@ -92,7 +94,7 @@ class ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-        minHeight: platformStore.isMobile ? 36 : 48,
+        minHeight: height ?? (platformStore.isMobile ? 36 : 48),
         minWidth: platformStore.isMobile ? 160 : 182,
       ),
       child: ElevatedButton(
@@ -109,7 +111,9 @@ class ActionButton extends StatelessWidget {
             (states) => _getBorder(states, context),
           ),
           padding: WidgetStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            height != null && platformStore.isMobile
+                ? const EdgeInsets.symmetric(horizontal: 24, vertical: 5)
+                : const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           ),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
