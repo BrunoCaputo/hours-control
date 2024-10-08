@@ -30,7 +30,6 @@ class SquadDetailsScreen extends StatefulWidget {
 class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
   late ScrollController _scrollController;
   late SquadEntity squad;
-  final TextEditingController _customPeriod = TextEditingController(text: "7");
   final ValueNotifier<int> _period = ValueNotifier<int>(7);
 
   @override
@@ -38,6 +37,10 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
     super.initState();
     _scrollController = ScrollController(initialScrollOffset: 0);
     squad = platformStore.selectedSquad!;
+    _fetchAllData();
+  }
+
+  void _fetchAllData() {
     Future.wait([
       _fetchSquadMembersReports(),
       _getSquadTotalHours(),
@@ -48,6 +51,10 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
   String _getEmptyText() {
     if (platformStore.squadEmployees.isEmpty) {
       return "Nenhum usuário cadastrado nesta squad. Crie um usuário para começar.";
+    }
+
+    if (platformStore.squadReportsList.isEmpty) {
+      return "Nenhuma hora lançada nesta squad. Lançe as horas para visualizar.";
     }
 
     return "";
@@ -276,7 +283,8 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
-                                    child: platformStore.squadEmployees.isEmpty
+                                    child: platformStore.squadEmployees.isEmpty ||
+                                            platformStore.squadReportsList.isEmpty
                                         ? Center(
                                             child: EmptyData(
                                               emptyText: _getEmptyText(),
@@ -352,6 +360,7 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                                           builder: (BuildContext context) {
                                             return CreateEmployeeDialog(
                                               squadId: squad.id,
+                                              afterCreate: _fetchSquadMembersReports,
                                             );
                                           },
                                         );
@@ -361,7 +370,8 @@ class _SquadDetailsScreenState extends State<SquadDetailsScreen> {
                               ),
                       ),
                       SizedBox(height: platformStore.isMobile ? 20 : 32),
-                      if (platformStore.squadEmployees.isNotEmpty)
+                      if (platformStore.squadEmployees.isNotEmpty &&
+                          platformStore.squadReportsList.isNotEmpty)
                         Column(
                           children: [
                             Text(

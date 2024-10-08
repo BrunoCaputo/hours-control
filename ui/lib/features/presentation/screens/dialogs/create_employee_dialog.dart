@@ -17,9 +17,11 @@ class CreateEmployeeDialog extends StatefulWidget {
   const CreateEmployeeDialog({
     super.key,
     this.squadId,
+    this.afterCreate,
   });
 
   final int? squadId;
+  final void Function()? afterCreate;
 
   @override
   State<CreateEmployeeDialog> createState() => _CreateEmployeeDialogState();
@@ -39,7 +41,9 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
       );
     }).toList();
 
-    if (squads.isNotEmpty) {
+    if (widget.squadId != null) {
+      _employeeSquadId.value = widget.squadId;
+    } else if (squads.isNotEmpty) {
       _employeeSquadId.value = squads.first.value;
     }
 
@@ -69,6 +73,9 @@ class _CreateEmployeeDialogState extends State<CreateEmployeeDialog> {
         );
         List<EmployeeEntity> newList = [...platformStore.employeeList, createdEmployee];
         platformStore.setEmployeeList(newList);
+        if (widget.afterCreate != null) {
+          widget.afterCreate!();
+        }
         Navigator.of(context).pop();
       } catch (error) {
         print("ERROR: $error");
