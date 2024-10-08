@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hours_control/core/mobx/platform_store.dart';
 import 'package:hours_control/features/domain/entities/employee_entity.dart';
+import 'package:hours_control/features/domain/entities/report_entity.dart';
 import 'package:hours_control/features/domain/usecases/create_report.dart';
 import 'package:hours_control/features/domain/usecases/fetch_employees.dart';
 import 'package:hours_control/features/presentation/components/action_button.dart';
@@ -26,20 +27,6 @@ class _NewReportDialogState extends State<NewReportDialog> {
   final ValueNotifier<int?> _reportEmployeeId = ValueNotifier<int?>(null);
   final TextEditingController _reportSpentHours = TextEditingController();
   final TextEditingController _reportDescription = TextEditingController();
-
-  Future<List<EmployeeEntity>> _fetchEmployees() async {
-    final FetchEmployeesUseCase fetchEmployeesUseCase = GetIt.I.get<FetchEmployeesUseCase>();
-
-    try {
-      List<EmployeeEntity> employees = await fetchEmployeesUseCase.call();
-      platformStore.setEmployeeList(employees);
-
-      return employees;
-    } catch (e) {
-      print('Error fetching employees: $e');
-      return [];
-    }
-  }
 
   List<DropdownMenuItem<int>> _getEmployeetems() {
     List<EmployeeEntity> employeeList = [];
@@ -74,7 +61,7 @@ class _NewReportDialogState extends State<NewReportDialog> {
 
       platformStore.setIsCreatingReport(true);
       try {
-        await createReportUseCase.call(
+        ReportEntity createdReport = await createReportUseCase.call(
           params: newReport,
         );
         ScaffoldMessenger.of(context).showSnackBar(
@@ -84,6 +71,14 @@ class _NewReportDialogState extends State<NewReportDialog> {
             type: SnackbarType.success,
           ),
         );
+
+        EmployeeEntity? squadEmployee = platformStore.squadEmployees.firstWhereOrNull(
+          (employee) => employee.id == int.parse(newReport["employeeId"]!),
+        );
+        if (platformStore.selectedSquad != null && squadEmployee != null) {
+          List<ReportEntity> newList = [createdReport, ...platformStore.squadReportsList];
+          platformStore.setSquadReportsList(newList);
+        }
         Navigator.of(context).pop();
       } catch (error) {
         print("ERROR: $error");
