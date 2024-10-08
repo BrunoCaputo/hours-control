@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2024-10-04T13:58:31.685Z",
+  "__export_date": "2024-10-08T01:23:38.574Z",
   "__export_source": "insomnia.desktop.app:v10.0.0",
   "resources": [
     {
@@ -119,7 +119,7 @@
     {
       "_id": "req_693c84c6af7a48c0812607e582c109d3",
       "parentId": "fld_17678316725c47a690af99c933feaa56",
-      "modified": 1727995651996,
+      "modified": 1728334364234,
       "created": 1727990281198,
       "url": "{{url}}/squad/hours/bymember",
       "name": "Get Member Hours by Period",
@@ -236,7 +236,7 @@
     {
       "_id": "req_d2986a37919b4cb986bb3924ab9f3124",
       "parentId": "fld_17678316725c47a690af99c933feaa56",
-      "modified": 1727992701189,
+      "modified": 1728268466835,
       "created": 1727982338634,
       "url": "{{url}}/squad",
       "name": "Create Squad",
@@ -244,7 +244,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n\t\"name\": \"Squad\"\n}"
+        "text": "{\n\t\"name\": \"FrontEnd\"\n}"
       },
       "parameters": [],
       "headers": [
@@ -264,25 +264,27 @@
       "_type": "request"
     },
     {
-      "_id": "req_b0643347e78f4ce3a82a312157e7135d",
+      "_id": "req_1809b5750bef4a4b8c970ff965c8a8c4",
       "parentId": "fld_4fe722e0f5c64523b36904d2ea9f9f98",
-      "modified": 1727995879727,
-      "created": 1727983882740,
-      "url": "{{url}}/report",
-      "name": "Create Report",
+      "modified": 1728343679872,
+      "created": 1728338912726,
+      "url": "{{url}}/report/52",
+      "name": "Get Reports by Squad ID",
       "description": "",
-      "method": "POST",
-      "body": {
-        "mimeType": "application/json",
-        "text": "{\n\t\"description\": \"Tradução para francês\",\n\t\"employee_id\": 72718,\n\t\"spent_hours\": 30.5\n}"
-      },
-      "parameters": [],
-      "headers": [
-        { "name": "Content-Type", "value": "application/json" },
-        { "name": "User-Agent", "value": "insomnia/10.0.0" }
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_91f913edbc8746f5a58d3d46b628a57a",
+          "name": "period",
+          "value": "1",
+          "description": "",
+          "disabled": false
+        }
       ],
+      "headers": [{ "name": "User-Agent", "value": "insomnia/10.0.0" }],
       "authentication": {},
-      "metaSortKey": -1727983882740,
+      "metaSortKey": -1727983882840,
       "isPrivate": false,
       "pathParameters": [],
       "settingStoreCookies": true,
@@ -304,6 +306,36 @@
       "environmentPropertyOrder": null,
       "metaSortKey": -1727972447437,
       "_type": "request_group"
+    },
+    {
+      "_id": "req_b0643347e78f4ce3a82a312157e7135d",
+      "parentId": "fld_4fe722e0f5c64523b36904d2ea9f9f98",
+      "modified": 1728322198466,
+      "created": 1727983882740,
+      "url": "{{url}}/report",
+      "name": "Create Report",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"description\": \"Tradução para francês\",\n\t\"employee_id\": 72718,\n\t\"spent_hours\": 30\n}"
+      },
+      "parameters": [],
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "User-Agent", "value": "insomnia/10.0.0" }
+      ],
+      "authentication": {},
+      "metaSortKey": -1727983882740,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
     },
     {
       "_id": "env_f4bb4060a14e3bfe9bafd26d5eb85364710c27e4",
