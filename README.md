@@ -12,6 +12,8 @@ No lado do servidor, foi desenvolvida uma `API` utilizando [Node.js](https://nod
 
 O banco de dados utilizado é o [PostgreSQL](https://www.postgresql.org/), e o gerenciamento das operações é realizado através do [Drizzle ORM](https://orm.drizzle.team/).
 
+> Nota: Certifique-se de executar o servidor primeiro.
+
 ### UI
 
 A interface do usuário foi desenvolvida em `Flutter`, garantindo uma experiência visual e funcional fluida.
@@ -56,8 +58,36 @@ A partir desse ponto, as requisições para a API estarão prontas para uso. Há
 
 Antes de iniciar a interface do usuário, certifique-se de ter o [flutter](https://docs.flutter.dev/get-started/install) instalado e configurado em seu ambiente.
 
-1. **Instalar as dependências**: Na pasta da [interface de usuário](./ui/pubspec.yaml), execute os comandos abaixo para instalar as dependências listadas no [pubspec.yaml](./ui/pubspec.yaml).
+1. **Instalar as dependências**: Navegue até a pasta da [interface de usuário](./ui/pubspec.yaml) e execute o comando abaixo para instalar todas as dependências listadas no arquivo [pubspec.yaml](./ui/pubspec.yaml).
 
 ```bash
 flutter clean && flutter pub get && dart run build_runner build --delete-conflicting-outputs
 ```
+
+> Nota: Para evitar problemas de conexão na rede local, recomenda-se utilizar um emulador Android.
+
+2. **Executar em seu ambiente de teste**: Após a configuração, você pode executar o projeto no seu dispositivo. As opções de execução incluem Android e Web.
+
+- **Android**: Para testar em um ambiente Android, execute:
+
+  ```bash
+  flutter run
+  ```
+
+  > Dica: Se você tiver um dispositivo físico Android conectado, ele será priorizado ao executar este comando sem especificação de dispositivo.
+
+- **Web**: Para executar na Web, escolha entre o navegador Chrome ou Edge:
+
+  ```bash
+  flutter run -d "Chrome"
+  ```
+
+  ou
+
+  ```bash
+  flutter run -d "Edge"
+  ```
+
+3. **Conexão com o servidor**: Se for necessário alterar a URL do servidor, basta modificar o valor de `serverApiBaseUrl` no arquivo [ui/lib/config/servcer_url.dart](./ui/lib/config/server_url.dart)
+
+> Dica: Se estiver usando um dispositivo Android físico, verifique o endereço IPv4 da máquina atual e atualize este arquivo com o novo IP.
